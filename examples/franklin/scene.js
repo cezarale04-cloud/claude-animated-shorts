@@ -300,14 +300,15 @@ const LIFE = [];
 const SKIN = '#f0c6a0', COAT = '#e9ebe8', SHIRT = '#3d8fa6', HAIRC = '#d9d6d0', TIE = '#c8322f';
 const F = { root: new THREE.Group() };
 scene.add(F.root);
-F.root.position.set(0, 0, -0.12);
+F.root.position.set(0, 0, -0.42);
 {
   // torso pivot at hips (y 0.95)
   const torso = new THREE.Group(); torso.position.y = 0.95; F.root.add(torso); F.torso = torso;
   const tp = [];
   // lab coat body (tapered), open at front showing shirt
-  tp.push(part(new THREE.CylinderGeometry(0.2, 0.25, 0.58, 28), COAT, 0, 0.27, 0, 0, 0, 0, 1, 1, 0.72));
-  tp.push(part(new THREE.CylinderGeometry(0.25, 0.28, 0.45, 28), COAT, 0, -0.2, 0, 0, 0, 0, 1, 1, 0.72)); // coat skirt (behind desk)
+  tp.push(part(new THREE.CylinderGeometry(0.2, 0.185, 0.58, 28), COAT, 0, 0.27, 0, 0, 0, 0, 1, 1, 0.72)); // chest tapering to the waist
+  tp.push(part(new THREE.CylinderGeometry(0.185, 0.21, 0.5, 28), COAT, 0, -0.27, 0, 0, 0, 0, 1, 1, 0.72)); // coat skirt (behind desk)
+  tp.push(part(new THREE.CylinderGeometry(0.188, 0.188, 0.035, 28), '#d4d6d2', 0, -0.0, 0, 0, 0, 0, 1, 1, 0.73)); // waist belt
   tp.push(part(S(0.2, 28, 14), COAT, 0, 0.55, 0, 0, 0, 0, 1.12, 0.45, 0.75)); // shoulders
   tp.push(part(new THREE.BoxGeometry(0.14, 0.5, 0.02), SHIRT, 0, 0.3, 0.15, -0.08, 0, 0)); // shirt wedge
   tp.push(part(new THREE.BoxGeometry(0.035, 0.03, 0.03), SHIRT, 0, 0.57, 0.135));
