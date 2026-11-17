@@ -27,6 +27,10 @@ User rules that apply:
 - "Just do it" once the script is approved.
 
 ## Pipeline
+0. **Hook checklist (mandatory).** Before choosing the topic, and again before the final render, run every check in
+   `references/HOOK_CHECKLIST.md` (topic appeal, recognizable first frame, single short hook line, no cut-off text,
+   look that stands out from the profile grid). Fix any failed check before moving on, and record the result at the
+   top of `SCRIPT.md`.
 1. **Topic and facts.** Pick one surprising true story with a physical cause and effect (it should be visual), plus a simple everyday analogy that explains it.
    - Write the facts with their source at the top of `SCRIPT.md`.
 2. **Script** (~3.7 words/s, 55-70 s). Beat formula from the bridge short:
@@ -72,7 +76,7 @@ User rules that apply:
    - Set `BRIDGE_ENTRY=src/sandboxes/<n>/index.tsx` to render a sandbox copy.
    - Make side-by-sides against reference frames with `python scripts/sbs_sheet.py out.jpg --ours ... --ref ...`.
    - Send them to an Opus max verifier: 1-3 images, a ≤200-word verdict.
-10. **Final render.**
+10. **Final render.** First re-run the hook checklist (`references/HOOK_CHECKLIST.md`) on the rendered first frame and cover frame.
     - `npx remotion render src/index.ts <Comp> out/<name>/video.mp4 --codec h264 --crf 16 --scale 1.3333`
     - Mux with `-map 0:v:0 -map 1:a:0` (Remotion writes a silent audio track).
     - QA: `python scripts/short_qa.py final.mp4 out/<name>/qa shots.json` checks every frame for black, white, frozen and pop frames, plus loudness and sheets.
