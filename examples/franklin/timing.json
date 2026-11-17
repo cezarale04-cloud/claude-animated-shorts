@@ -1,0 +1,41 @@
+{
+ "duration": 25.634,
+ "segments": [
+  {
+   "id": "hello",
+   "text": "Olá! Eu sou o Franklin.",
+   "start": 0.6,
+   "end": 2.324
+  },
+  {
+   "id": "who",
+   "text": "Cientista, inventor, e caçador de curiosidades.",
+   "start": 2.674,
+   "end": 5.48
+  },
+  {
+   "id": "what",
+   "text": "Aqui nesta conta, eu trago fatos incríveis sobre ciência, natureza, o espaço, o corpo humano, e a história.",
+   "start": 5.93,
+   "end": 12.088
+  },
+  {
+   "id": "how",
+   "text": "Tudo explicado de um jeito rápido, fácil, e divertido.",
+   "start": 12.488,
+   "end": 15.33
+  },
+  {
+   "id": "goal",
+   "text": "O nosso objetivo é simples: despertar a sua curiosidade, e mostrar que aprender pode ser uma grande aventura.",
+   "start": 15.83,
+   "end": 21.318
+  },
+  {
+   "id": "follow",
+   "text": "Então, siga a conta, e venha descobrir o mundo comigo!",
+   "start": 21.818,
+   "end": 24.734
+  }
+ ]
+}

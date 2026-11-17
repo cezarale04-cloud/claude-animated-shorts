@@ -1,0 +1,6 @@
+.venv/
+voices/
+node_modules
+out/still_*
+out/sheet.jpg
+out/franklin_video.mp4
