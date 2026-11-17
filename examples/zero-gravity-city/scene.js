@@ -524,7 +524,7 @@ function frameRel(t, right, up, fwd) {
 // 1) The car right in front of us lifts off the road.
 {
   const car = makeCar('#d8342c', 'sedan');
-  addFloater(car, new THREE.Vector3(-1.8, 0.9, 6), { t0: 0.4, v: new THREE.Vector3(0.05, 0.75, 0.05), r0: new THREE.Euler(0, 0.25, 0), w: new THREE.Vector3(0.05, 0.03, -0.09), bob: 0 });
+  addFloater(car, new THREE.Vector3(-3.6, 0.9, 5), { t0: 0.4, v: new THREE.Vector3(-0.15, 0.75, 0.0), r0: new THREE.Euler(0, 0.25, 0), w: new THREE.Vector3(0.05, 0.03, -0.09), bob: 0 });
   const taxi = makeCar('#f4c430', 'taxi');
   addFloater(taxi, new THREE.Vector3(3.6, 0.9, 0), { t0: 0.9, v: new THREE.Vector3(-0.05, 0.6, 0), r0: new THREE.Euler(0, -0.15, 0), w: new THREE.Vector3(-0.07, 0.04, 0.06), bob: 0 });
   const bus = makeCar('#2f6fd6', 'van');
