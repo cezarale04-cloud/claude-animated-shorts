@@ -1,6 +1,6 @@
 # Franklin, the curiosity scientist
 
-A 25-second vertical presenter video (1080x1920, 9:16, 30 fps) that introduces a curiosities account. Franklin is a friendly 3D cartoon scientist: white lab coat, red bow tie, pens in his pocket, round glasses, safety goggles pushed up on his forehead, fluffy grey hair and a bushy mustache. He speaks Brazilian Portuguese, and his lips are synced to the voice. No text on screen.
+A 25-second vertical presenter video (1080x1920, 9:16, 30 fps) that introduces a curiosities account. Franklin is a friendly 3D cartoon scientist: white lab coat, red bow tie, pens in his pocket, round glasses, safety goggles pushed up on his forehead, fluffy grey hair and a bushy mustache. He stands in a 3D lab with experiments running behind him: a distillation over a Bunsen burner, a Tesla coil throwing sparks, glowing bubble columns and drifting steam. He speaks Brazilian Portuguese, and his lips are synced to the voice. No text on screen.
 
 Script:
 > Olá! Eu sou o Franklin. Cientista, inventor, e caçador de curiosidades.

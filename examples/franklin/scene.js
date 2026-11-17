@@ -203,6 +203,99 @@ const bubbles = [];
   scene.add(mesh([part(new THREE.BoxGeometry(0.26, 0.05, 0.19), '#2b59c3', 0.72, DESK_Y + 0.055, 0.1, 0, 0.2, 0), part(new THREE.BoxGeometry(0.24, 0.045, 0.18), '#c3342b', 0.73, DESK_Y + 0.1, 0.1, 0, -0.1, 0), part(new THREE.BoxGeometry(0.22, 0.04, 0.17), '#2b9348', 0.72, DESK_Y + 0.143, 0.09, 0, 0.35, 0)], M.cloth));
 }
 
+// ---------- experiments on the back bench (behind Franklin) ----------
+const LIFE = [];
+{
+  const BZ = -1.35, BY = 1.0;
+  const glassM = new THREE.MeshStandardMaterial({ color: 0xe6f6ff, transparent: true, opacity: 0.22, roughness: 0.04, metalness: 0.15, side: THREE.DoubleSide, envMapIntensity: 1.6 });
+  const glow = (c, k = 1.6, o = {}) => new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: k, roughness: 0.25, ...o });
+  // bench with cabinet doors
+  const bench = [part(new THREE.BoxGeometry(2.6, 0.05, 0.6), '#3a2c22', 0, BY, BZ), part(new THREE.BoxGeometry(2.56, BY - 0.02, 0.56), '#24434a', 0, (BY - 0.02) / 2, BZ)];
+  for (let i = 0; i < 5; i++) bench.push(part(new THREE.BoxGeometry(0.46, 0.6, 0.01), '#2c5159', -1.02 + i * 0.51, 0.5, BZ + 0.285), part(new THREE.BoxGeometry(0.1, 0.015, 0.02), '#c9a35a', -1.02 + i * 0.51, 0.72, BZ + 0.3));
+  scene.add(mesh(bench));
+  // ring stands
+  const stand = (x, z, h) => [part(new THREE.BoxGeometry(0.18, 0.015, 0.14), '#2b2b2e', x, BY + 0.03, z), part(new THREE.CylinderGeometry(0.007, 0.007, h, 8), '#9aa0a6', x - 0.07, BY + h / 2, z)];
+  // 1) distillation, screen left: round flask over a burner -> glass tube -> condenser coil -> beaker
+  {
+    const x = -0.6, z = BZ;
+    scene.add(mesh([...stand(x, z, 0.75), part(new THREE.TorusGeometry(0.075, 0.006, 6, 24), '#9aa0a6', x, BY + 0.27, z, Math.PI / 2, 0, 0), part(new THREE.BoxGeometry(0.08, 0.006, 0.006), '#9aa0a6', x - 0.035, BY + 0.27, z)], M.shiny));
+    const burner = mesh([part(new THREE.CylinderGeometry(0.045, 0.055, 0.03, 16), '#2b2b2e', x, BY + 0.04, z), part(new THREE.CylinderGeometry(0.014, 0.016, 0.13, 12), '#b8b8bc', x, BY + 0.115, z)], M.shiny); scene.add(burner);
+    const flameO = new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.09, 14), new THREE.MeshBasicMaterial({ color: 0xffa040, transparent: true, opacity: 0.75, toneMapped: false }));
+    const flameI = new THREE.Mesh(new THREE.ConeGeometry(0.012, 0.05, 12), new THREE.MeshBasicMaterial({ color: 0x5aa0ff, toneMapped: false }));
+    scene.add(flameO, flameI);
+    const fl = new THREE.PointLight(0xff9a40, 0.8, 1.2, 2); fl.position.set(x, BY + 0.24, z + 0.05); scene.add(fl);
+    const liq = new THREE.Mesh(new THREE.SphereGeometry(0.083, 24, 16, 0, Math.PI * 2, Math.PI * 0.42, Math.PI * 0.58), glow('#3ef08a', 1.5)); liq.position.set(x, BY + 0.36, z); scene.add(liq);
+    const flask = new THREE.Mesh(mergeGeometries([colored(S(0.09, 28, 20), '#fff'), colored(new THREE.CylinderGeometry(0.022, 0.022, 0.16, 14, 1, true), '#fff').translate(0, 0.15, 0)]), glassM); flask.position.set(x, BY + 0.36, z); scene.add(flask);
+    // delivery tube to the condenser (to screen left)
+    const path = new THREE.CatmullRomCurve3([new THREE.Vector3(x, BY + 0.52, z), new THREE.Vector3(x, BY + 0.6, z), new THREE.Vector3(x - 0.12, BY + 0.62, z), new THREE.Vector3(x - 0.3, BY + 0.5, z)]);
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(path, 30, 0.009, 8), glassM));
+    const coilPts = []; for (let i = 0; i <= 120; i++) { const a = i / 120 * Math.PI * 2 * 5; coilPts.push(new THREE.Vector3(x - 0.3 + Math.cos(a) * 0.04, BY + 0.5 - i / 120 * 0.3, z + Math.sin(a) * 0.04)); }
+    const coilCurve = new THREE.CatmullRomCurve3(coilPts);
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(coilCurve, 240, 0.007, 6), glow('#7fe8ff', 0.9, { transparent: true, opacity: 0.85 })));
+    { const jk = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.34, 18, 1, true), glassM); jk.position.set(x - 0.3, BY + 0.35, z); scene.add(jk); }
+    // collecting beaker with a glowing drip
+    const bk = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.045, 0.12, 18, 1, true), glassM); bk.position.set(x - 0.3, BY + 0.085, z); scene.add(bk);
+    const bkl = new THREE.Mesh(new THREE.CylinderGeometry(0.044, 0.042, 0.05, 18), glow('#3ef08a', 1.3)); bkl.position.set(x - 0.3, BY + 0.055, z); scene.add(bkl);
+    const drip = new THREE.Mesh(S(0.007, 8, 6), glow('#7dffb0', 2.5)); scene.add(drip);
+    const fbub = [];
+    for (let i = 0; i < 10; i++) { const b = new THREE.Mesh(S(0.006 + 0.005 * hash(i + 40), 8, 6), glow('#b8ffd8', 2.2, { transparent: true })); scene.add(b); fbub.push(b); }
+    LIFE.push((t) => {
+      const fk = 1 + 0.18 * Math.sin(t * 31) + 0.12 * Math.sin(t * 47 + 1);
+      flameO.scale.set(1, fk, 1); flameO.position.set(x, BY + 0.18 + 0.045 * fk, z);
+      flameI.scale.set(1, fk, 1); flameI.position.set(x, BY + 0.18 + 0.025 * fk, z);
+      fl.intensity = 0.7 * fk;
+      const u = (t * 1.3) % 1; drip.position.set(x - 0.3, BY + 0.2 - u * 0.12, z); drip.scale.setScalar(u < 0.9 ? 1 : 0.0001);
+      fbub.forEach((b, i) => { const v = (t * (0.9 + hash(i) * 0.6) + hash(i + 7)) % 1; b.position.set(x + (hash(i + 3) - 0.5) * 0.1 * (1 - v), BY + 0.3 + v * 0.1, z + (hash(i + 5) - 0.5) * 0.08); b.material.opacity = 1 - v; });
+    });
+  }
+  // 2) Tesla coil with electric arcs, screen right
+  {
+    const x = 0.68, z = BZ - 0.05;
+    const coil = [part(new THREE.CylinderGeometry(0.11, 0.13, 0.08, 24), '#2b2b2e', x, BY + 0.065, z), part(new THREE.CylinderGeometry(0.04, 0.04, 0.5, 20), '#b0602a', x, BY + 0.35, z)];
+    for (let i = 0; i < 40; i++) coil.push(part(new THREE.TorusGeometry(0.042, 0.003, 4, 20), '#d98c3a', x, BY + 0.12 + i * 0.012, z, Math.PI / 2, 0, 0));
+    coil.push(part(new THREE.TorusGeometry(0.075, 0.032, 14, 36), '#c8ccd2', x, BY + 0.64, z, Math.PI / 2, 0, 0));
+    scene.add(mesh(coil, M.shiny));
+    const arcMat = new THREE.LineBasicMaterial({ color: 0xbfe6ff, toneMapped: false, transparent: true });
+    const arcs = []; for (let i = 0; i < 5; i++) { const l = new THREE.Line(new THREE.BufferGeometry(), arcMat.clone()); scene.add(l); arcs.push(l); }
+    const al = new THREE.PointLight(0x9fd8ff, 0, 1.6, 2); al.position.set(x, BY + 0.7, z + 0.1); scene.add(al);
+    LIFE.push((t, f) => {
+      const burst = 0.5 + 0.5 * Math.sin(t * 2.1);
+      arcs.forEach((l, i) => {
+        const fr = Math.floor(f / 2) + i * 13;
+        const on = hash(fr * 1.7) < 0.35 + 0.5 * burst;
+        l.visible = on; if (!on) return;
+        const a0 = hash(fr) * Math.PI * 2, len = 0.18 + hash(fr + 2) * 0.22, pts = [];
+        const start = new THREE.Vector3(x + Math.cos(a0) * 0.1, BY + 0.64, z + Math.sin(a0) * 0.1);
+        const dir = new THREE.Vector3(Math.cos(a0), (hash(fr + 4) - 0.3) * 1.2, Math.sin(a0) * 0.6).normalize();
+        for (let k = 0; k <= 10; k++) { const p = start.clone().addScaledVector(dir, len * k / 10); if (k) p.add(new THREE.Vector3(hash(fr + k * 3.1) - 0.5, hash(fr + k * 5.3) - 0.5, hash(fr + k * 7.7) - 0.5).multiplyScalar(0.05)); pts.push(p); }
+        l.geometry.setFromPoints(pts); l.material.opacity = 0.6 + 0.4 * hash(fr + 9);
+      });
+      al.intensity = 1.6 * burst * (hash(Math.floor(f / 2) * 3.3) > 0.3 ? 1 : 0.3);
+    });
+  }
+  // 3) two tall bubble columns, just beside his shoulders
+  for (const [x, col] of [[-0.42, '#3ef0c0'], [0.44, '#ff6ad5']]) {
+    const z = BZ + 0.05, h = 0.95;
+    scene.add(mesh([part(new THREE.CylinderGeometry(0.075, 0.085, 0.05, 24), '#2b2b2e', x, BY + 0.05, z), part(new THREE.CylinderGeometry(0.075, 0.075, 0.04, 24), '#2b2b2e', x, BY + 0.08 + h, z)], M.shiny));
+    const liqC = new THREE.Mesh(new THREE.CylinderGeometry(0.058, 0.058, h * 0.85, 24), glow(col, 0.9, { transparent: true, opacity: 0.55 })); liqC.position.set(x, BY + 0.075 + h * 0.425, z); scene.add(liqC);
+    const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, h, 24, 1, true), glassM); tube.position.set(x, BY + 0.075 + h / 2, z); scene.add(tube);
+    const pl = new THREE.PointLight(col, 0.9, 1.4, 2); pl.position.set(x, BY + 0.6, z + 0.15); scene.add(pl);
+    const bs = [];
+    for (let i = 0; i < 16; i++) { const b = new THREE.Mesh(S(0.008 + 0.01 * hash(i * 2.3 + x), 10, 8), glow('#ffffff', 1.4, { transparent: true, opacity: 0.8 })); scene.add(b); bs.push(b); }
+    LIFE.push((t) => bs.forEach((b, i) => { const v = (t * (0.18 + 0.15 * hash(i + x)) + hash(i * 1.9 + x)) % 1; b.position.set(x + Math.sin(v * 12 + i) * 0.03, BY + 0.1 + v * h * 0.8, z + Math.cos(v * 9 + i) * 0.03); b.scale.setScalar(0.6 + v * 0.6); }));
+  }
+  // 4) soft steam rising from the experiments
+  const steamTex = canvasTex(128, 128, (g, w, h) => { const gr = g.createRadialGradient(w / 2, h / 2, 2, w / 2, h / 2, w / 2); gr.addColorStop(0, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
+  const puffs = [];
+  for (let i = 0; i < 18; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: steamTex, transparent: true, depthWrite: false, color: 0xd8f0ff })); scene.add(s); puffs.push(s); }
+  const vents = [[-0.6, BY + 0.55, BZ], [-0.62, DESK_Y + 0.25, 0.3], [0.66, DESK_Y + 0.22, 0.38]];
+  LIFE.push((t) => puffs.forEach((s, i) => {
+    const [vx, vy, vz] = vents[i % 3]; const v = (t * 0.25 + hash(i * 4.1)) % 1;
+    s.position.set(vx + Math.sin(v * 4 + i) * 0.05 * v, vy + v * 0.55, vz); const sc = 0.06 + v * 0.22; s.scale.set(sc, sc, 1);
+    s.material.opacity = 0.35 * Math.sin(Math.PI * v);
+  }));
+}
+
 // ---------- Franklin ----------
 const SKIN = '#f0c6a0', COAT = '#e9ebe8', SHIRT = '#3d8fa6', HAIRC = '#d9d6d0', TIE = '#c8322f';
 const F = { root: new THREE.Group() };
@@ -572,6 +665,7 @@ window.renderFrame = (f) => {
   });
   window.__jars.forEach((j, i) => { j.material.emissiveIntensity = 1.3 + 0.4 * Math.sin(t * (1 + hash(i)) + i); });
 
+  LIFE.forEach(fn => fn(t, f));
   // --- camera: slow push-in, gentle float, closer for the final invitation ---
   const push = smooth(t / 12) * 0.25 + smooth((t - 15) / 6) * 0.1 + smooth((t - 21.8) / 2.5) * 0.25;
   camPos.set(0.05 * Math.sin(t * 0.21), 1.62 + 0.015 * Math.sin(t * 0.33), 2.85 - push);
