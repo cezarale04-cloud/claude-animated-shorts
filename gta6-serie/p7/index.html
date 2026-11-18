@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="assets/lib/gsap.min.js"></script>
+<style>
+:root { --pink:#ff2e88; --cyan:#3DF5FF; --yel:#ffd84d; --ink:#12002b; --font-display:"Archivo Black", sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:1080px; height:1920px; overflow:hidden; background:#1a0b3d; }
+#root { position:relative; width:1080px; height:1920px; font-family:var(--font-display); overflow:hidden; }
+#stage { position:absolute; inset:0; }
+#stage canvas { display:block; width:1080px; height:1920px; }
+.partb { position:absolute; left:0; right:0; top:196px; display:flex; justify-content:center; z-index:9; }
+.parti { font-family:"Inter", sans-serif; font-weight:900; font-size:28px; letter-spacing:3px; color:var(--ink); background:var(--yel); padding:6px 20px; border-radius:10px; }
+.title { position:absolute; left:0; right:0; top:270px; display:flex; justify-content:center; z-index:10; }
+.titlei { text-align:center; color:#fff; font-size:72px; line-height:1.05; -webkit-text-stroke:14px var(--ink); paint-order:stroke fill; text-shadow:0 0 30px rgba(255,46,136,.8); }
+.titlei em { font-style:normal; color:var(--cyan); }
+.cap { position:absolute; left:130px; right:130px; top:1170px; display:flex; justify-content:center; z-index:12; }
+.capi { text-align:center; font-size:64px; line-height:1.1; color:#fff; -webkit-text-stroke:12px #000; paint-order:stroke fill; }
+.cw { display:inline-block; }
+.it { position:absolute; left:0; right:0; display:flex; justify-content:center; z-index:11; }
+.hero { text-align:center; font-size:250px; line-height:0.95; color:#fff; -webkit-text-stroke:20px var(--ink); paint-order:stroke fill; text-shadow:0 0 60px var(--pink), 0 0 120px var(--pink); }
+.hero em { font-style:normal; color:var(--cyan); }
+.big { font-size:190px; line-height:1; color:#fff; -webkit-text-stroke:18px var(--ink); paint-order:stroke fill; text-shadow:0 0 50px var(--pink); }
+.big small { font-size:120px; color:var(--cyan); }
+.chip { background:var(--ink); color:#fff; font-size:46px; padding:12px 32px; border-radius:40px; border:4px solid var(--cyan); text-align:center; }
+.chip.red { border-color:#ff4d4d; color:#ff8a8a; }
+.note { font-family:"Inter", sans-serif; font-weight:700; font-size:28px; color:#fff; background:rgba(18,0,43,.78); padding:6px 18px; border-radius:20px; }
+.tag { color:#fff; font-size:66px; padding:10px 34px; border-radius:18px; border:6px solid #fff; box-shadow:0 10px 0 rgba(0,0,0,.35); background:var(--pink); }
+.tagsm { color:#fff; font-size:44px; padding:8px 24px; border-radius:14px; border:5px solid #fff; box-shadow:0 8px 0 rgba(0,0,0,.35); background:#7b2ff7; }
+.cta { display:flex; align-items:center; gap:22px; background:var(--pink); color:#fff; font-size:64px; padding:18px 44px; border-radius:24px; border:7px solid #fff; }
+.arrow { width:0; height:0; border-left:26px solid transparent; border-right:26px solid transparent; border-top:40px solid #fff; }
+.arrowr { width:0; height:0; border-top:26px solid transparent; border-bottom:26px solid transparent; border-left:40px solid #fff; }
+.vs { display:flex; align-items:center; gap:30px; }
+.vs .card { background:#fff; color:var(--ink); font-size:84px; padding:20px 34px; border-radius:24px; border:8px solid var(--cyan); }
+.vs .card.b { border-color:var(--pink); background:var(--ink); color:#fff; box-shadow:0 0 50px var(--pink); }
+.vs .x { font-size:90px; color:var(--yel); -webkit-text-stroke:12px var(--ink); paint-order:stroke fill; }
+.strike { position:relative; }
+.strike::after { content:""; position:absolute; left:-6%; right:-6%; top:50%; height:12px; background:#ff4d4d; transform:rotate(-6deg); border-radius:6px; }
+.mapcmp { display:flex; align-items:flex-end; gap:40px; }
+.mapcmp .m { border:7px solid #fff; border-radius:14px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:46px; text-align:center; }
+.mapcmp .a { width:230px; height:230px; background:rgba(61,245,255,.35); }
+.mapcmp .b { width:325px; height:325px; background:rgba(255,46,136,.45); box-shadow:0 0 50px var(--pink); }
+.bars { position:relative; width:820px; }
+.bars .track { height:28px; border-radius:20px; background:rgba(18,0,43,.75); border:5px solid #fff; overflow:hidden; }
+.bars .fill { height:100%; background:linear-gradient(90deg,var(--pink),var(--cyan)); transform-origin:left center; }
+.bars .ticks { display:flex; justify-content:space-between; color:#fff; font-size:38px; margin-top:12px; -webkit-text-stroke:8px var(--ink); paint-order:stroke fill; text-align:center; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px 24px; width:880px; }
+.phone { width:340px; height:600px; border-radius:46px; background:#0d0221; border:10px solid #fff; position:relative; overflow:hidden; box-shadow:0 0 60px var(--pink); }
+.phone .scr { position:absolute; inset:0; background:linear-gradient(180deg,#ff2e88,#7b2ff7 55%,#12002b); }
+.phone .user { position:absolute; left:22px; bottom:120px; color:#fff; font-family:"Inter",sans-serif; font-weight:900; font-size:28px; }
+.phone .views { position:absolute; left:22px; bottom:70px; color:var(--yel); font-size:40px; }
+.phone .rail { position:absolute; right:18px; bottom:90px; display:flex; flex-direction:column; gap:22px; }
+.phone .dot { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.9); }
+.phone .play { position:absolute; left:50%; top:38%; width:0; height:0; border-top:50px solid transparent; border-bottom:50px solid transparent; border-left:80px solid rgba(255,255,255,.85); transform:translate(-35%,-50%); }
+.trophy { display:flex; flex-direction:column; align-items:center; }
+.trophy .cup { width:150px; height:120px; background:var(--yel); border-radius:0 0 75px 75px; border:8px solid var(--ink); }
+.trophy .stem { width:40px; height:40px; background:var(--yel); border-left:8px solid var(--ink); border-right:8px solid var(--ink); }
+.trophy .base { width:150px; height:34px; background:var(--yel); border:8px solid var(--ink); border-radius:8px; }
+
+.heart { position:relative; width:60px; height:54px; display:inline-block; }
+.heart::before, .heart::after { content:""; position:absolute; top:0; width:32px; height:52px; background:#fff; border-radius:32px 32px 0 0; }
+.heart::before { left:30px; transform:rotate(-45deg); transform-origin:0 100%; }
+.heart::after { left:-2px; transform:rotate(45deg); transform-origin:100% 100%; }
+
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="42.33" data-width="1080" data-height="1920">
+  <div id="stage" class="clip" data-start="0" data-duration="42.33" data-track-index="0" data-track-kind="graphics"></div>
+  <div id="part" class="clip partb" data-start="0" data-duration="42.33" data-track-index="1"><div class="parti">GTA 6 · PARTE 7</div></div>
+  <div id="t0" class="clip title" data-start="0.00" data-duration="3.76" data-track-index="2"><div id="t0i" class="titlei">TOUR POR <em>LEONIDA</em></div></div>
+<div id="i1" class="clip it" style="top:480px" data-start="0.00" data-duration="3.76" data-track-index="4"><div id="i1i" class="hero" style="font-size:170px">6 LUGARES</div></div>
+<div id="t1" class="clip title" data-start="3.76" data-duration="4.33" data-track-index="2"><div id="t1i" class="titlei">PARADA <em>1</em></div></div>
+<div id="i2" class="clip it" style="top:480px" data-start="3.81" data-duration="4.28" data-track-index="4"><div id="i2i" class="tag" style="background:#ff2e88;font-size:72px">VICE CITY</div></div>
+<div id="i3" class="clip it" style="top:640px" data-start="4.36" data-duration="3.73" data-track-index="4"><div id="i3i" class="chip" style="font-size:40px">sol · praia · vida noturna</div></div>
+<div id="t2" class="clip title" data-start="8.09" data-duration="4.68" data-track-index="2"><div id="t2i" class="titlei">PARADA <em>2</em></div></div>
+<div id="i4" class="clip it" style="top:480px" data-start="8.13" data-duration="4.63" data-track-index="4"><div id="i4i" class="tag" style="background:#00b8c4;font-size:72px">LEONIDA KEYS</div></div>
+<div id="i5" class="clip it" style="top:640px" data-start="8.69" data-duration="4.08" data-track-index="4"><div id="i5i" class="chip" style="font-size:40px">ilhas inspiradas nas Florida Keys</div></div>
+<div id="t3" class="clip title" data-start="12.76" data-duration="4.34" data-track-index="2"><div id="t3i" class="titlei">PARADA <em>3</em></div></div>
+<div id="i6" class="clip it" style="top:480px" data-start="12.81" data-duration="4.29" data-track-index="4"><div id="i6i" class="tag" style="background:#3e8e3a;font-size:72px">GRASSRIVERS</div></div>
+<div id="i7" class="clip it" style="top:640px" data-start="13.36" data-duration="3.74" data-track-index="4"><div id="i7i" class="chip" style="font-size:40px">pântanos cheios de jacarés</div></div>
+<div id="t4" class="clip title" data-start="17.10" data-duration="4.30" data-track-index="2"><div id="t4i" class="titlei">PARADA <em>4</em></div></div>
+<div id="i8" class="clip it" style="top:480px" data-start="17.15" data-duration="4.25" data-track-index="4"><div id="i8i" class="tag" style="background:#c77d2b;font-size:72px">PORT GELLHORN</div></div>
+<div id="i9" class="clip it" style="top:640px" data-start="17.70" data-duration="3.70" data-track-index="4"><div id="i9i" class="chip" style="font-size:40px">litoral que já viveu dias melhores</div></div>
+<div id="t5" class="clip title" data-start="21.40" data-duration="4.84" data-track-index="2"><div id="t5i" class="titlei">PARADA <em>5</em></div></div>
+<div id="i10" class="clip it" style="top:480px" data-start="21.45" data-duration="4.79" data-track-index="4"><div id="i10i" class="tag" style="background:#7b2ff7;font-size:72px">AMBROSIA</div></div>
+<div id="i11" class="clip it" style="top:640px" data-start="22.00" data-duration="4.24" data-track-index="4"><div id="i11i" class="chip" style="font-size:40px">interior · refinaria de açúcar</div></div>
+<div id="t6" class="clip title" data-start="26.24" data-duration="5.10" data-track-index="2"><div id="t6i" class="titlei">PARADA <em>6</em></div></div>
+<div id="i12" class="clip it" style="top:480px" data-start="26.29" data-duration="5.05" data-track-index="4"><div id="i12i" class="tag" style="background:#2b6cb0;font-size:72px">MOUNT KALAGA</div></div>
+<div id="i13" class="clip it" style="top:640px" data-start="26.84" data-duration="4.50" data-track-index="4"><div id="i13i" class="chip" style="font-size:40px">parque nacional · trilhas · aventura</div></div>
+<div id="t7" class="clip title" data-start="31.33" data-duration="6.41" data-track-index="2"><div id="t7i" class="titlei">PRA ONDE VOCÊ <em>VAI?</em></div></div>
+<div id="i14" class="clip it" style="top:520px" data-start="33.44" data-duration="4.30" data-track-index="4"><div id="i14i" class="cta" style="">COMENTA <span class="arrow"></span></div></div>
+<div id="i15" class="clip it" style="top:700px" data-start="34.44" data-duration="3.30" data-track-index="4"><div id="i15i" class="tag" style="background:#7b2ff7;font-size:54px">PARTE 8: BASTIDORES</div></div>
+<div id="t8" class="clip title" data-start="37.74" data-duration="4.59" data-track-index="2"><div id="t8i" class="titlei">CURTE E <em>SEGUE!</em></div></div>
+<div id="i16" class="clip it" style="top:470px" data-start="37.79" data-duration="4.54" data-track-index="4"><div id="i16i" class="tag" style="background:#ff2e88;font-size:76px;display:flex;align-items:center;gap:26px"><span class="heart"></span> CURTE</div></div>
+<div id="i17" class="clip it" style="top:640px" data-start="39.30" data-duration="3.03" data-track-index="4"><div id="i17i" class="tag" style="background:#2b6cb0;font-size:70px">DEIXA SEU LIKE</div></div>
+<div id="i18" class="clip it" style="top:810px" data-start="39.73" data-duration="2.60" data-track-index="4"><div id="i18i" class="tag" style="background:#3DF5FF;color:#12002b;font-size:96px;border-color:#12002b">+ SEGUIR</div></div>
+  <div id="cap0" class="clip cap" data-start="0.136" data-duration="0.591" data-track-index="3"><div id="capi0" class="capi"><span id="w0_0" class="cw">BORA</span> <span id="w0_1" class="cw">FAZER</span> <span id="w0_2" class="cw">UM</span></div></div>
+<div id="cap1" class="clip cap" data-start="0.727" data-duration="1.122" data-track-index="3"><div id="capi1" class="capi"><span id="w1_0" class="cw">TOUR</span> <span id="w1_1" class="cw">POR</span> <span id="w1_2" class="cw">LEONIDA</span></div></div>
+<div id="cap2" class="clip cap" data-start="1.849" data-duration="0.498" data-track-index="3"><div id="capi2" class="capi"><span id="w2_0" class="cw">O</span> <span id="w2_1" class="cw">ESTADO</span> <span id="w2_2" class="cw">DO</span></div></div>
+<div id="cap3" class="clip cap" data-start="2.347" data-duration="1.440" data-track-index="3"><div id="capi3" class="capi"><span id="w3_0" class="cw">GTA</span> <span id="w3_1" class="cw">6</span></div></div>
+<div id="cap4" class="clip cap" data-start="3.844" data-duration="1.065" data-track-index="3"><div id="capi4" class="capi"><span id="w4_0" class="cw">VICE</span> <span id="w4_1" class="cw">CITY</span> <span id="w4_2" class="cw">A</span></div></div>
+<div id="cap5" class="clip cap" data-start="4.909" data-duration="1.238" data-track-index="3"><div id="capi5" class="capi"><span id="w5_0" class="cw">METRÓPOLE</span> <span id="w5_1" class="cw">DE</span> <span id="w5_2" class="cw">SOL</span></div></div>
+<div id="cap6" class="clip cap" data-start="6.147" data-duration="0.937" data-track-index="3"><div id="capi6" class="capi"><span id="w6_0" class="cw">PRAIA</span> <span id="w6_1" class="cw">E</span> <span id="w6_2" class="cw">VIDA</span></div></div>
+<div id="cap7" class="clip cap" data-start="7.084" data-duration="1.081" data-track-index="3"><div id="capi7" class="capi"><span id="w7_0" class="cw">NOTURNA</span></div></div>
+<div id="cap8" class="clip cap" data-start="8.173" data-duration="1.273" data-track-index="3"><div id="capi8" class="capi"><span id="w8_0" class="cw">LEONIDA</span> <span id="w8_1" class="cw">KEYS</span> <span id="w8_2" class="cw">UM</span></div></div>
+<div id="cap9" class="clip cap" data-start="9.446" data-duration="1.238" data-track-index="3"><div id="capi9" class="capi"><span id="w9_0" class="cw">PARAÍSO</span> <span id="w9_1" class="cw">DE</span> <span id="w9_2" class="cw">ILHAS</span></div></div>
+<div id="cap10" class="clip cap" data-start="10.684" data-duration="1.134" data-track-index="3"><div id="capi10" class="capi"><span id="w10_0" class="cw">INSPIRADO</span> <span id="w10_1" class="cw">NAS</span> <span id="w10_2" class="cw">FLORIDA</span></div></div>
+<div id="cap11" class="clip cap" data-start="11.818" data-duration="1.023" data-track-index="3"><div id="capi11" class="capi"><span id="w11_0" class="cw">KEYS</span></div></div>
+<div id="cap12" class="clip cap" data-start="12.849" data-duration="1.782" data-track-index="3"><div id="capi12" class="capi"><span id="w12_0" class="cw">GRASSRIVERS</span> <span id="w12_1" class="cw">OS</span> <span id="w12_2" class="cw">PÂNTANOS</span></div></div>
+<div id="cap13" class="clip cap" data-start="14.631" data-duration="1.343" data-track-index="3"><div id="capi13" class="capi"><span id="w13_0" class="cw">SELVAGENS</span> <span id="w13_1" class="cw">CHEIOS</span> <span id="w13_2" class="cw">DE</span></div></div>
+<div id="cap14" class="clip cap" data-start="15.974" data-duration="1.208" data-track-index="3"><div id="capi14" class="capi"><span id="w14_0" class="cw">JACARÉS</span></div></div>
+<div id="cap15" class="clip cap" data-start="17.192" data-duration="1.192" data-track-index="3"><div id="capi15" class="capi"><span id="w15_0" class="cw">PORT</span> <span id="w15_1" class="cw">GELLHORN</span> <span id="w15_2" class="cw">UMA</span></div></div>
+<div id="cap16" class="clip cap" data-start="18.384" data-duration="1.018" data-track-index="3"><div id="capi16" class="capi"><span id="w16_0" class="cw">CIDADE</span> <span id="w16_1" class="cw">DO</span> <span id="w16_2" class="cw">LITORAL</span></div></div>
+<div id="cap17" class="clip cap" data-start="19.402" data-duration="0.567" data-track-index="3"><div id="capi17" class="capi"><span id="w17_0" class="cw">QUE</span> <span id="w17_1" class="cw">JÁ</span> <span id="w17_2" class="cw">VIVEU</span></div></div>
+<div id="cap18" class="clip cap" data-start="19.969" data-duration="1.510" data-track-index="3"><div id="capi18" class="capi"><span id="w18_0" class="cw">DIAS</span> <span id="w18_1" class="cw">MELHORES</span></div></div>
+<div id="cap19" class="clip cap" data-start="21.485" data-duration="1.609" data-track-index="3"><div id="capi19" class="capi"><span id="w19_0" class="cw">AMBROSIA</span> <span id="w19_1" class="cw">UMA</span> <span id="w19_2" class="cw">REGIÃO</span></div></div>
+<div id="cap20" class="clip cap" data-start="23.094" data-duration="0.845" data-track-index="3"><div id="capi20" class="capi"><span id="w20_0" class="cw">DO</span> <span id="w20_1" class="cw">INTERIOR</span> <span id="w20_2" class="cw">COM</span></div></div>
+<div id="cap21" class="clip cap" data-start="23.939" data-duration="1.250" data-track-index="3"><div id="capi21" class="capi"><span id="w21_0" class="cw">UMA</span> <span id="w21_1" class="cw">ENORME</span> <span id="w21_2" class="cw">REFINARIA</span></div></div>
+<div id="cap22" class="clip cap" data-start="25.189" data-duration="1.127" data-track-index="3"><div id="capi22" class="capi"><span id="w22_0" class="cw">DE</span> <span id="w22_1" class="cw">AÇÚCAR</span></div></div>
+<div id="cap23" class="clip cap" data-start="26.322" data-duration="1.088" data-track-index="3"><div id="capi23" class="capi"><span id="w23_0" class="cw">E</span> <span id="w23_1" class="cw">MOUNT</span> <span id="w23_2" class="cw">KALAGA</span></div></div>
+<div id="cap24" class="clip cap" data-start="27.410" data-duration="0.880" data-track-index="3"><div id="capi24" class="capi"><span id="w24_0" class="cw">UM</span> <span id="w24_1" class="cw">PARQUE</span> <span id="w24_2" class="cw">NACIONAL</span></div></div>
+<div id="cap25" class="clip cap" data-start="28.290" data-duration="1.354" data-track-index="3"><div id="capi25" class="capi"><span id="w25_0" class="cw">DE</span> <span id="w25_1" class="cw">NATUREZA</span> <span id="w25_2" class="cw">SELVAGEM</span></div></div>
+<div id="cap26" class="clip cap" data-start="29.644" data-duration="1.717" data-track-index="3"><div id="capi26" class="capi"><span id="w26_0" class="cw">TRILHAS</span> <span id="w26_1" class="cw">E</span> <span id="w26_2" class="cw">AVENTURA</span></div></div>
+<div id="cap27" class="clip cap" data-start="31.417" data-duration="0.811" data-track-index="3"><div id="capi27" class="capi"><span id="w27_0" class="cw">PRA</span> <span id="w27_1" class="cw">QUAL</span> <span id="w27_2" class="cw">DESSES</span></div></div>
+<div id="cap28" class="clip cap" data-start="32.228" data-duration="1.203" data-track-index="3"><div id="capi28" class="capi"><span id="w28_0" class="cw">VOCÊ</span> <span id="w28_1" class="cw">VAI</span> <span id="w28_2" class="cw">PRIMEIRO</span></div></div>
+<div id="cap29" class="clip cap" data-start="33.431" data-duration="1.344" data-track-index="3"><div id="capi29" class="capi"><span id="w29_0" class="cw">COMENTA</span> <span id="w29_1" class="cw">NA</span> <span id="w29_2" class="cw">PARTE</span></div></div>
+<div id="cap30" class="clip cap" data-start="34.775" data-duration="1.319" data-track-index="3"><div id="capi30" class="capi"><span id="w30_0" class="cw">OITO</span> <span id="w30_1" class="cw">OS</span> <span id="w30_2" class="cw">BASTIDORES</span></div></div>
+<div id="cap31" class="clip cap" data-start="36.094" data-duration="1.729" data-track-index="3"><div id="capi31" class="capi"><span id="w31_0" class="cw">DO</span> <span id="w31_1" class="cw">GTA</span> <span id="w31_2" class="cw">6</span></div></div>
+<div id="cap32" class="clip cap" data-start="37.830" data-duration="1.041" data-track-index="3"><div id="capi32" class="capi"><span id="w32_0" class="cw">CURTE</span> <span id="w32_1" class="cw">ESSE</span> <span id="w32_2" class="cw">VÍDEO</span></div></div>
+<div id="cap33" class="clip cap" data-start="38.871" data-duration="0.417" data-track-index="3"><div id="capi33" class="capi"><span id="w33_0" class="cw">DEIXA</span> <span id="w33_1" class="cw">O</span> <span id="w33_2" class="cw">SEU</span></div></div>
+<div id="cap34" class="clip cap" data-start="39.288" data-duration="0.694" data-track-index="3"><div id="capi34" class="capi"><span id="w34_0" class="cw">LIKE</span> <span id="w34_1" class="cw">E</span> <span id="w34_2" class="cw">SEGUE</span></div></div>
+<div id="cap35" class="clip cap" data-start="39.982" data-duration="0.498" data-track-index="3"><div id="capi35" class="capi"><span id="w35_0" class="cw">O</span> <span id="w35_1" class="cw">PERFIL</span> <span id="w35_2" class="cw">PRA</span></div></div>
+<div id="cap36" class="clip cap" data-start="40.480" data-duration="1.532" data-track-index="3"><div id="capi36" class="capi"><span id="w36_0" class="cw">NÃO</span> <span id="w36_1" class="cw">PERDER</span> <span id="w36_2" class="cw">NADA</span></div></div>
+  <audio id="mix" src="assets/audio/mix.wav" data-start="0" data-duration="42.33" data-track-index="9"></audio>
+</div>
+<script>window.__cfg = {"storm": [], "lightning": [], "animals": true, "rise": null, "flash": [3.857, 8.085], "shots": [["top", 0, 3.757], ["crane", 3.757, 8.085], ["sea", 8.085, 12.761], ["gator", 12.761, 17.102], ["beach", 17.102, 21.399], ["aerial", 21.399, 26.236], ["orbit", 26.236, 31.331], ["rushBack", 31.331, 42.33]], "total": 42.33};</script>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#t1i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},3.76);
+tl.fromTo("#i2i",{x:-800,rotation:-5},{x:0,rotation:-3,duration:0.26,ease:'back.out(1.6)'},3.81);
+tl.fromTo("#i3i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},4.36);
+tl.fromTo("#t2i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},8.09);
+tl.fromTo("#i4i",{x:800,rotation:5},{x:0,rotation:3,duration:0.26,ease:'back.out(1.6)'},8.13);
+tl.fromTo("#i5i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},8.69);
+tl.fromTo("#t3i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},12.76);
+tl.fromTo("#i6i",{x:-800,rotation:-5},{x:0,rotation:-3,duration:0.26,ease:'back.out(1.6)'},12.81);
+tl.fromTo("#i7i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},13.36);
+tl.fromTo("#t4i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},17.10);
+tl.fromTo("#i8i",{x:800,rotation:5},{x:0,rotation:3,duration:0.26,ease:'back.out(1.6)'},17.15);
+tl.fromTo("#i9i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},17.70);
+tl.fromTo("#t5i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},21.40);
+tl.fromTo("#i10i",{x:-800,rotation:-5},{x:0,rotation:-3,duration:0.26,ease:'back.out(1.6)'},21.45);
+tl.fromTo("#i11i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},22.00);
+tl.fromTo("#t6i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},26.24);
+tl.fromTo("#i12i",{x:800,rotation:5},{x:0,rotation:3,duration:0.26,ease:'back.out(1.6)'},26.29);
+tl.fromTo("#i13i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},26.84);
+tl.fromTo("#t7i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},31.33);
+tl.fromTo("#i14i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},33.44);
+tl.fromTo("#i15i",{scale:0.4,opacity:0},{scale:1,opacity:1,duration:0.22,ease:'back.out(2.2)'},34.44);
+tl.fromTo("#t8i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},37.74);
+tl.fromTo("#i16i",{scale:0.4,opacity:0},{scale:1,opacity:1,duration:0.22,ease:'back.out(2.2)'},37.79);
+tl.fromTo("#i17i",{x:-800,rotation:-5},{x:0,rotation:-3,duration:0.26,ease:'back.out(1.6)'},39.30);
+tl.fromTo("#i18i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},39.73);
+tl.to("#i18i",{scale:1.1,duration:0.18,yoyo:true,repeat:5,ease:"sine.inOut"},40.08);
+tl.set("#w0_0",{color:"#3DF5FF",scale:1.08},0.176);
+tl.set("#w0_0",{color:"#FFFFFF",scale:1},0.448);
+tl.set("#w0_1",{color:"#3DF5FF",scale:1.08},0.408);
+tl.set("#w0_1",{color:"#FFFFFF",scale:1},0.691);
+tl.set("#w0_2",{color:"#3DF5FF",scale:1.08},0.651);
+tl.set("#w0_2",{color:"#FFFFFF",scale:1},0.807);
+tl.fromTo("#capi0",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},0.136);
+tl.set("#w1_0",{color:"#3DF5FF",scale:1.08},0.767);
+tl.set("#w1_0",{color:"#FFFFFF",scale:1},0.969);
+tl.set("#w1_1",{color:"#3DF5FF",scale:1.08},0.929);
+tl.set("#w1_1",{color:"#FFFFFF",scale:1},1.131);
+tl.set("#w1_2",{color:"#3DF5FF",scale:1.08},1.091);
+tl.set("#w1_2",{color:"#FFFFFF",scale:1},1.767);
+tl.fromTo("#capi1",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},0.727);
+tl.set("#w2_0",{color:"#3DF5FF",scale:1.08},1.889);
+tl.set("#w2_0",{color:"#FFFFFF",scale:1},1.987);
+tl.set("#w2_1",{color:"#3DF5FF",scale:1.08},1.947);
+tl.set("#w2_1",{color:"#FFFFFF",scale:1},2.334);
+tl.set("#w2_2",{color:"#3DF5FF",scale:1.08},2.294);
+tl.set("#w2_2",{color:"#FFFFFF",scale:1},2.427);
+tl.fromTo("#capi2",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},1.849);
+tl.set("#w3_0",{color:"#3DF5FF",scale:1.08},2.387);
+tl.set("#w3_0",{color:"#FFFFFF",scale:1},2.809);
+tl.set("#w3_1",{color:"#3DF5FF",scale:1.08},2.769);
+tl.set("#w3_1",{color:"#FFFFFF",scale:1},3.307);
+tl.fromTo("#capi3",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},2.347);
+tl.set("#w4_0",{color:"#3DF5FF",scale:1.08},3.884);
+tl.set("#w4_0",{color:"#FFFFFF",scale:1},4.271);
+tl.set("#w4_1",{color:"#3DF5FF",scale:1.08},4.231);
+tl.set("#w4_1",{color:"#FFFFFF",scale:1},4.711);
+tl.set("#w4_2",{color:"#3DF5FF",scale:1.08},4.902);
+tl.set("#w4_2",{color:"#FFFFFF",scale:1},4.989);
+tl.fromTo("#capi4",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},3.844);
+tl.set("#w5_0",{color:"#3DF5FF",scale:1.08},4.949);
+tl.set("#w5_0",{color:"#FFFFFF",scale:1},5.567);
+tl.set("#w5_1",{color:"#3DF5FF",scale:1.08},5.527);
+tl.set("#w5_1",{color:"#FFFFFF",scale:1},5.671);
+tl.set("#w5_2",{color:"#3DF5FF",scale:1.08},5.631);
+tl.set("#w5_2",{color:"#FFFFFF",scale:1},6.100);
+tl.fromTo("#capi5",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},4.909);
+tl.set("#w6_0",{color:"#3DF5FF",scale:1.08},6.187);
+tl.set("#w6_0",{color:"#FFFFFF",scale:1},6.748);
+tl.set("#w6_1",{color:"#3DF5FF",scale:1.08},6.708);
+tl.set("#w6_1",{color:"#FFFFFF",scale:1},6.864);
+tl.set("#w6_2",{color:"#3DF5FF",scale:1.08},6.824);
+tl.set("#w6_2",{color:"#FFFFFF",scale:1},7.164);
+tl.fromTo("#capi6",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},6.147);
+tl.set("#w7_0",{color:"#3DF5FF",scale:1.08},7.124);
+tl.set("#w7_0",{color:"#FFFFFF",scale:1},7.685);
+tl.fromTo("#capi7",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},7.084);
+tl.set("#w8_0",{color:"#3DF5FF",scale:1.08},8.213);
+tl.set("#w8_0",{color:"#FFFFFF",scale:1},8.797);
+tl.set("#w8_1",{color:"#3DF5FF",scale:1.08},8.757);
+tl.set("#w8_1",{color:"#FFFFFF",scale:1},9.190);
+tl.set("#w8_2",{color:"#3DF5FF",scale:1.08},9.405);
+tl.set("#w8_2",{color:"#FFFFFF",scale:1},9.526);
+tl.fromTo("#capi8",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},8.173);
+tl.set("#w9_0",{color:"#3DF5FF",scale:1.08},9.486);
+tl.set("#w9_0",{color:"#FFFFFF",scale:1},10.104);
+tl.set("#w9_1",{color:"#3DF5FF",scale:1.08},10.064);
+tl.set("#w9_1",{color:"#FFFFFF",scale:1},10.243);
+tl.set("#w9_2",{color:"#3DF5FF",scale:1.08},10.203);
+tl.set("#w9_2",{color:"#FFFFFF",scale:1},10.602);
+tl.fromTo("#capi9",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},9.446);
+tl.set("#w10_0",{color:"#3DF5FF",scale:1.08},10.724);
+tl.set("#w10_0",{color:"#FFFFFF",scale:1},11.297);
+tl.set("#w10_1",{color:"#3DF5FF",scale:1.08},11.257);
+tl.set("#w10_1",{color:"#FFFFFF",scale:1},11.447);
+tl.set("#w10_2",{color:"#3DF5FF",scale:1.08},11.407);
+tl.set("#w10_2",{color:"#FFFFFF",scale:1},11.898);
+tl.fromTo("#capi10",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},10.684);
+tl.set("#w11_0",{color:"#3DF5FF",scale:1.08},11.858);
+tl.set("#w11_0",{color:"#FFFFFF",scale:1},12.361);
+tl.fromTo("#capi11",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},11.818);
+tl.set("#w12_0",{color:"#3DF5FF",scale:1.08},12.889);
+tl.set("#w12_0",{color:"#FFFFFF",scale:1},13.750);
+tl.set("#w12_1",{color:"#3DF5FF",scale:1.08},14.046);
+tl.set("#w12_1",{color:"#FFFFFF",scale:1},14.190);
+tl.set("#w12_2",{color:"#3DF5FF",scale:1.08},14.150);
+tl.set("#w12_2",{color:"#FFFFFF",scale:1},14.711);
+tl.fromTo("#capi12",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},12.849);
+tl.set("#w13_0",{color:"#3DF5FF",scale:1.08},14.671);
+tl.set("#w13_0",{color:"#FFFFFF",scale:1},15.382);
+tl.set("#w13_1",{color:"#3DF5FF",scale:1.08},15.493);
+tl.set("#w13_1",{color:"#FFFFFF",scale:1},15.961);
+tl.set("#w13_2",{color:"#3DF5FF",scale:1.08},15.921);
+tl.set("#w13_2",{color:"#FFFFFF",scale:1},16.054);
+tl.fromTo("#capi13",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},14.631);
+tl.set("#w14_0",{color:"#3DF5FF",scale:1.08},16.014);
+tl.set("#w14_0",{color:"#FFFFFF",scale:1},16.702);
+tl.fromTo("#capi14",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},15.974);
+tl.set("#w15_0",{color:"#3DF5FF",scale:1.08},17.232);
+tl.set("#w15_0",{color:"#FFFFFF",scale:1},17.573);
+tl.set("#w15_1",{color:"#3DF5FF",scale:1.08},17.533);
+tl.set("#w15_1",{color:"#FFFFFF",scale:1},18.070);
+tl.set("#w15_2",{color:"#3DF5FF",scale:1.08},18.308);
+tl.set("#w15_2",{color:"#FFFFFF",scale:1},18.464);
+tl.fromTo("#capi15",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},17.192);
+tl.set("#w16_0",{color:"#3DF5FF",scale:1.08},18.424);
+tl.set("#w16_0",{color:"#FFFFFF",scale:1},18.927);
+tl.set("#w16_1",{color:"#3DF5FF",scale:1.08},18.887);
+tl.set("#w16_1",{color:"#FFFFFF",scale:1},18.985);
+tl.set("#w16_2",{color:"#3DF5FF",scale:1.08},18.945);
+tl.set("#w16_2",{color:"#FFFFFF",scale:1},19.482);
+tl.fromTo("#capi16",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},18.384);
+tl.set("#w17_0",{color:"#3DF5FF",scale:1.08},19.442);
+tl.set("#w17_0",{color:"#FFFFFF",scale:1},19.563);
+tl.set("#w17_1",{color:"#3DF5FF",scale:1.08},19.523);
+tl.set("#w17_1",{color:"#FFFFFF",scale:1},19.714);
+tl.set("#w17_2",{color:"#3DF5FF",scale:1.08},19.674);
+tl.set("#w17_2",{color:"#FFFFFF",scale:1},20.049);
+tl.fromTo("#capi17",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},19.402);
+tl.set("#w18_0",{color:"#3DF5FF",scale:1.08},20.009);
+tl.set("#w18_0",{color:"#FFFFFF",scale:1},20.408);
+tl.set("#w18_1",{color:"#3DF5FF",scale:1.08},20.368);
+tl.set("#w18_1",{color:"#FFFFFF",scale:1},20.999);
+tl.fromTo("#capi18",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},19.969);
+tl.set("#w19_0",{color:"#3DF5FF",scale:1.08},21.525);
+tl.set("#w19_0",{color:"#FFFFFF",scale:1},22.282);
+tl.set("#w19_1",{color:"#3DF5FF",scale:1.08},22.497);
+tl.set("#w19_1",{color:"#FFFFFF",scale:1},22.676);
+tl.set("#w19_2",{color:"#3DF5FF",scale:1.08},22.636);
+tl.set("#w19_2",{color:"#FFFFFF",scale:1},23.174);
+tl.fromTo("#capi19",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},21.485);
+tl.set("#w20_0",{color:"#3DF5FF",scale:1.08},23.134);
+tl.set("#w20_0",{color:"#FFFFFF",scale:1},23.243);
+tl.set("#w20_1",{color:"#3DF5FF",scale:1.08},23.203);
+tl.set("#w20_1",{color:"#FFFFFF",scale:1},23.764);
+tl.set("#w20_2",{color:"#3DF5FF",scale:1.08},23.874);
+tl.set("#w20_2",{color:"#FFFFFF",scale:1},24.019);
+tl.fromTo("#capi20",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},23.094);
+tl.set("#w21_0",{color:"#3DF5FF",scale:1.08},23.979);
+tl.set("#w21_0",{color:"#FFFFFF",scale:1},24.157);
+tl.set("#w21_1",{color:"#3DF5FF",scale:1.08},24.117);
+tl.set("#w21_1",{color:"#FFFFFF",scale:1},24.644);
+tl.set("#w21_2",{color:"#3DF5FF",scale:1.08},24.604);
+tl.set("#w21_2",{color:"#FFFFFF",scale:1},25.269);
+tl.fromTo("#capi21",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},23.939);
+tl.set("#w22_0",{color:"#3DF5FF",scale:1.08},25.229);
+tl.set("#w22_0",{color:"#FFFFFF",scale:1},25.326);
+tl.set("#w22_1",{color:"#3DF5FF",scale:1.08},25.286);
+tl.set("#w22_1",{color:"#FFFFFF",scale:1},25.836);
+tl.fromTo("#capi22",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},25.189);
+tl.set("#w23_0",{color:"#3DF5FF",scale:1.08},26.362);
+tl.set("#w23_0",{color:"#FFFFFF",scale:1},26.483);
+tl.set("#w23_1",{color:"#3DF5FF",scale:1.08},26.443);
+tl.set("#w23_1",{color:"#FFFFFF",scale:1},26.807);
+tl.set("#w23_2",{color:"#3DF5FF",scale:1.08},26.767);
+tl.set("#w23_2",{color:"#FFFFFF",scale:1},27.258);
+tl.fromTo("#capi23",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},26.322);
+tl.set("#w24_0",{color:"#3DF5FF",scale:1.08},27.450);
+tl.set("#w24_0",{color:"#FFFFFF",scale:1},27.594);
+tl.set("#w24_1",{color:"#3DF5FF",scale:1.08},27.554);
+tl.set("#w24_1",{color:"#FFFFFF",scale:1},27.918);
+tl.set("#w24_2",{color:"#3DF5FF",scale:1.08},27.878);
+tl.set("#w24_2",{color:"#FFFFFF",scale:1},28.370);
+tl.fromTo("#capi24",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},27.410);
+tl.set("#w25_0",{color:"#3DF5FF",scale:1.08},28.330);
+tl.set("#w25_0",{color:"#FFFFFF",scale:1},28.439);
+tl.set("#w25_1",{color:"#3DF5FF",scale:1.08},28.399);
+tl.set("#w25_1",{color:"#FFFFFF",scale:1},28.867);
+tl.set("#w25_2",{color:"#3DF5FF",scale:1.08},28.827);
+tl.set("#w25_2",{color:"#FFFFFF",scale:1},29.585);
+tl.fromTo("#capi25",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},28.290);
+tl.set("#w26_0",{color:"#3DF5FF",scale:1.08},29.684);
+tl.set("#w26_0",{color:"#FFFFFF",scale:1},30.094);
+tl.set("#w26_1",{color:"#3DF5FF",scale:1.08},30.054);
+tl.set("#w26_1",{color:"#FFFFFF",scale:1},30.245);
+tl.set("#w26_2",{color:"#3DF5FF",scale:1.08},30.205);
+tl.set("#w26_2",{color:"#FFFFFF",scale:1},30.881);
+tl.fromTo("#capi26",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},29.644);
+tl.set("#w27_0",{color:"#3DF5FF",scale:1.08},31.457);
+tl.set("#w27_0",{color:"#FFFFFF",scale:1},31.648);
+tl.set("#w27_1",{color:"#3DF5FF",scale:1.08},31.608);
+tl.set("#w27_1",{color:"#FFFFFF",scale:1},31.949);
+tl.set("#w27_2",{color:"#3DF5FF",scale:1.08},31.909);
+tl.set("#w27_2",{color:"#FFFFFF",scale:1},32.308);
+tl.fromTo("#capi27",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},31.417);
+tl.set("#w28_0",{color:"#3DF5FF",scale:1.08},32.268);
+tl.set("#w28_0",{color:"#FFFFFF",scale:1},32.551);
+tl.set("#w28_1",{color:"#3DF5FF",scale:1.08},32.511);
+tl.set("#w28_1",{color:"#FFFFFF",scale:1},32.690);
+tl.set("#w28_2",{color:"#3DF5FF",scale:1.08},32.650);
+tl.set("#w28_2",{color:"#FFFFFF",scale:1},33.164);
+tl.fromTo("#capi28",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},32.228);
+tl.set("#w29_0",{color:"#3DF5FF",scale:1.08},33.471);
+tl.set("#w29_0",{color:"#FFFFFF",scale:1},34.021);
+tl.set("#w29_1",{color:"#3DF5FF",scale:1.08},34.294);
+tl.set("#w29_1",{color:"#FFFFFF",scale:1},34.508);
+tl.set("#w29_2",{color:"#3DF5FF",scale:1.08},34.468);
+tl.set("#w29_2",{color:"#FFFFFF",scale:1},34.855);
+tl.fromTo("#capi29",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},33.431);
+tl.set("#w30_0",{color:"#3DF5FF",scale:1.08},34.815);
+tl.set("#w30_0",{color:"#FFFFFF",scale:1},35.202);
+tl.set("#w30_1",{color:"#3DF5FF",scale:1.08},35.336);
+tl.set("#w30_1",{color:"#FFFFFF",scale:1},35.491);
+tl.set("#w30_2",{color:"#3DF5FF",scale:1.08},35.451);
+tl.set("#w30_2",{color:"#FFFFFF",scale:1},36.174);
+tl.fromTo("#capi30",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},34.775);
+tl.set("#w31_0",{color:"#3DF5FF",scale:1.08},36.134);
+tl.set("#w31_0",{color:"#FFFFFF",scale:1},36.302);
+tl.set("#w31_1",{color:"#3DF5FF",scale:1.08},36.262);
+tl.set("#w31_1",{color:"#FFFFFF",scale:1},36.811);
+tl.set("#w31_2",{color:"#3DF5FF",scale:1.08},36.771);
+tl.set("#w31_2",{color:"#FFFFFF",scale:1},37.343);
+tl.fromTo("#capi31",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},36.094);
+tl.set("#w32_0",{color:"#3DF5FF",scale:1.08},37.870);
+tl.set("#w32_0",{color:"#FFFFFF",scale:1},38.153);
+tl.set("#w32_1",{color:"#3DF5FF",scale:1.08},38.113);
+tl.set("#w32_1",{color:"#FFFFFF",scale:1},38.349);
+tl.set("#w32_2",{color:"#3DF5FF",scale:1.08},38.309);
+tl.set("#w32_2",{color:"#FFFFFF",scale:1},38.697);
+tl.fromTo("#capi32",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},37.830);
+tl.set("#w33_0",{color:"#3DF5FF",scale:1.08},38.911);
+tl.set("#w33_0",{color:"#FFFFFF",scale:1},39.183);
+tl.set("#w33_1",{color:"#3DF5FF",scale:1.08},39.143);
+tl.set("#w33_1",{color:"#FFFFFF",scale:1},39.194);
+tl.set("#w33_2",{color:"#3DF5FF",scale:1.08},39.154);
+tl.set("#w33_2",{color:"#FFFFFF",scale:1},39.368);
+tl.fromTo("#capi33",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},38.871);
+tl.set("#w34_0",{color:"#3DF5FF",scale:1.08},39.328);
+tl.set("#w34_0",{color:"#FFFFFF",scale:1},39.761);
+tl.set("#w34_1",{color:"#3DF5FF",scale:1.08},39.721);
+tl.set("#w34_1",{color:"#FFFFFF",scale:1},39.796);
+tl.set("#w34_2",{color:"#3DF5FF",scale:1.08},39.756);
+tl.set("#w34_2",{color:"#FFFFFF",scale:1},40.062);
+tl.fromTo("#capi34",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},39.288);
+tl.set("#w35_0",{color:"#3DF5FF",scale:1.08},40.022);
+tl.set("#w35_0",{color:"#FFFFFF",scale:1},40.085);
+tl.set("#w35_1",{color:"#3DF5FF",scale:1.08},40.045);
+tl.set("#w35_1",{color:"#FFFFFF",scale:1},40.433);
+tl.set("#w35_2",{color:"#3DF5FF",scale:1.08},40.393);
+tl.set("#w35_2",{color:"#FFFFFF",scale:1},40.560);
+tl.fromTo("#capi35",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},39.982);
+tl.set("#w36_0",{color:"#3DF5FF",scale:1.08},40.520);
+tl.set("#w36_0",{color:"#FFFFFF",scale:1},40.815);
+tl.set("#w36_1",{color:"#3DF5FF",scale:1.08},40.775);
+tl.set("#w36_1",{color:"#FFFFFF",scale:1},41.162);
+tl.set("#w36_2",{color:"#3DF5FF",scale:1.08},41.122);
+tl.set("#w36_2",{color:"#FFFFFF",scale:1},41.532);
+tl.fromTo("#capi36",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},40.480);
+window.__timelines["main"] = tl;
+tl.seek(0);
+</script>
+<script type="module" src="assets/scene.js"></script>
+</body>
+</html>
