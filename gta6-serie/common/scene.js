@@ -1,15 +1,15 @@
 import * as THREE from "./lib/three.module.min.js";
 
-const W = 1080, H = 1920;
+const W = (window.__cfg && window.__cfg.W) || 1080, H = (window.__cfg && window.__cfg.H) || 1920;
 const stage = document.getElementById("stage");
-const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-renderer.setPixelRatio(1);
+const renderer = new THREE.WebGLRenderer({ antialias: !(window.__cfg && window.__cfg.px < 1), preserveDrawingBuffer: true });
+renderer.setPixelRatio((window.__cfg && window.__cfg.px) || 1);
 renderer.setSize(W, H, false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 stage.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog("#5a1a6e", 60, 190);
-const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 600);
+const camera = new THREE.PerspectiveCamera((window.__cfg && window.__cfg.fov) || 50, W / H, 0.1, 600);
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const ramp = (t, a, b) => clamp((t - a) / (b - a));
