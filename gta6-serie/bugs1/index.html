@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="assets/lib/gsap.min.js"></script>
+<style>
+:root { --pink:#ff2e88; --cyan:#3DF5FF; --yel:#ffd84d; --ink:#12002b; --font-display:"Archivo Black", sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:1080px; height:1920px; overflow:hidden; background:#1a0b3d; }
+#root { position:relative; width:1080px; height:1920px; font-family:var(--font-display); overflow:hidden; }
+#stage { position:absolute; inset:0; }
+#stage canvas { display:block; width:1080px; height:1920px; }
+.partb { position:absolute; left:0; right:0; top:196px; display:flex; justify-content:center; z-index:9; }
+.parti { font-family:"Inter", sans-serif; font-weight:900; font-size:28px; letter-spacing:3px; color:var(--ink); background:var(--yel); padding:6px 20px; border-radius:10px; }
+.title { position:absolute; left:0; right:0; top:270px; display:flex; justify-content:center; z-index:10; }
+.titlei { text-align:center; color:#fff; font-size:72px; line-height:1.05; -webkit-text-stroke:14px var(--ink); paint-order:stroke fill; text-shadow:0 0 30px rgba(255,46,136,.8); }
+.titlei em { font-style:normal; color:var(--cyan); }
+.cap { position:absolute; left:130px; right:130px; top:1170px; display:flex; justify-content:center; z-index:12; }
+.capi { text-align:center; font-size:64px; line-height:1.1; color:#fff; -webkit-text-stroke:12px #000; paint-order:stroke fill; }
+.cw { display:inline-block; }
+.it { position:absolute; left:0; right:0; display:flex; justify-content:center; z-index:11; }
+.hero { text-align:center; font-size:250px; line-height:0.95; color:#fff; -webkit-text-stroke:20px var(--ink); paint-order:stroke fill; text-shadow:0 0 60px var(--pink), 0 0 120px var(--pink); }
+.hero em { font-style:normal; color:var(--cyan); }
+.big { font-size:190px; line-height:1; color:#fff; -webkit-text-stroke:18px var(--ink); paint-order:stroke fill; text-shadow:0 0 50px var(--pink); }
+.big small { font-size:120px; color:var(--cyan); }
+.chip { background:var(--ink); color:#fff; font-size:46px; padding:12px 32px; border-radius:40px; border:4px solid var(--cyan); text-align:center; }
+.chip.red { border-color:#ff4d4d; color:#ff8a8a; }
+.note { font-family:"Inter", sans-serif; font-weight:700; font-size:28px; color:#fff; background:rgba(18,0,43,.78); padding:6px 18px; border-radius:20px; }
+.tag { color:#fff; font-size:66px; padding:10px 34px; border-radius:18px; border:6px solid #fff; box-shadow:0 10px 0 rgba(0,0,0,.35); background:var(--pink); }
+.tagsm { color:#fff; font-size:44px; padding:8px 24px; border-radius:14px; border:5px solid #fff; box-shadow:0 8px 0 rgba(0,0,0,.35); background:#7b2ff7; }
+.cta { display:flex; align-items:center; gap:22px; background:var(--pink); color:#fff; font-size:64px; padding:18px 44px; border-radius:24px; border:7px solid #fff; }
+.arrow { width:0; height:0; border-left:26px solid transparent; border-right:26px solid transparent; border-top:40px solid #fff; }
+.arrowr { width:0; height:0; border-top:26px solid transparent; border-bottom:26px solid transparent; border-left:40px solid #fff; }
+.vs { display:flex; align-items:center; gap:30px; }
+.vs .card { background:#fff; color:var(--ink); font-size:84px; padding:20px 34px; border-radius:24px; border:8px solid var(--cyan); }
+.vs .card.b { border-color:var(--pink); background:var(--ink); color:#fff; box-shadow:0 0 50px var(--pink); }
+.vs .x { font-size:90px; color:var(--yel); -webkit-text-stroke:12px var(--ink); paint-order:stroke fill; }
+.strike { position:relative; }
+.strike::after { content:""; position:absolute; left:-6%; right:-6%; top:50%; height:12px; background:#ff4d4d; transform:rotate(-6deg); border-radius:6px; }
+.mapcmp { display:flex; align-items:flex-end; gap:40px; }
+.mapcmp .m { border:7px solid #fff; border-radius:14px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:46px; text-align:center; }
+.mapcmp .a { width:230px; height:230px; background:rgba(61,245,255,.35); }
+.mapcmp .b { width:325px; height:325px; background:rgba(255,46,136,.45); box-shadow:0 0 50px var(--pink); }
+.bars { position:relative; width:820px; }
+.bars .track { height:28px; border-radius:20px; background:rgba(18,0,43,.75); border:5px solid #fff; overflow:hidden; }
+.bars .fill { height:100%; background:linear-gradient(90deg,var(--pink),var(--cyan)); transform-origin:left center; }
+.bars .ticks { display:flex; justify-content:space-between; color:#fff; font-size:38px; margin-top:12px; -webkit-text-stroke:8px var(--ink); paint-order:stroke fill; text-align:center; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px 24px; width:880px; }
+.phone { width:340px; height:600px; border-radius:46px; background:#0d0221; border:10px solid #fff; position:relative; overflow:hidden; box-shadow:0 0 60px var(--pink); }
+.phone .scr { position:absolute; inset:0; background:linear-gradient(180deg,#ff2e88,#7b2ff7 55%,#12002b); }
+.phone .user { position:absolute; left:22px; bottom:120px; color:#fff; font-family:"Inter",sans-serif; font-weight:900; font-size:28px; }
+.phone .views { position:absolute; left:22px; bottom:70px; color:var(--yel); font-size:40px; }
+.phone .rail { position:absolute; right:18px; bottom:90px; display:flex; flex-direction:column; gap:22px; }
+.phone .dot { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.9); }
+.phone .play { position:absolute; left:50%; top:38%; width:0; height:0; border-top:50px solid transparent; border-bottom:50px solid transparent; border-left:80px solid rgba(255,255,255,.85); transform:translate(-35%,-50%); }
+.trophy { display:flex; flex-direction:column; align-items:center; }
+.trophy .cup { width:150px; height:120px; background:var(--yel); border-radius:0 0 75px 75px; border:8px solid var(--ink); }
+.trophy .stem { width:40px; height:40px; background:var(--yel); border-left:8px solid var(--ink); border-right:8px solid var(--ink); }
+.trophy .base { width:150px; height:34px; background:var(--yel); border:8px solid var(--ink); border-radius:8px; }
+
+.heart { position:relative; width:60px; height:54px; display:inline-block; }
+.heart::before, .heart::after { content:""; position:absolute; top:0; width:32px; height:52px; background:#fff; border-radius:32px 32px 0 0; }
+.heart::before { left:30px; transform:rotate(-45deg); transform-origin:0 100%; }
+.heart::after { left:-2px; transform:rotate(45deg); transform-origin:100% 100%; }
+
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="32.72" data-width="1080" data-height="1920">
+  <div id="stage" class="clip" data-start="0" data-duration="32.72" data-track-index="0" data-track-kind="graphics"></div>
+  <div id="part" class="clip partb" data-start="0" data-duration="32.72" data-track-index="1"><div class="parti">GTA 6 · PARTE 1/3</div></div>
+  <div id="t0" class="clip title" data-start="0.00" data-duration="4.48" data-track-index="2"><div id="t0i" class="titlei">GTA 6 <em>LANÇOU!</em></div></div>
+<div id="i1" class="clip it" style="top:1160px" data-start="3.03" data-duration="1.46" data-track-index="4"><div id="i1i" class="tag" style="background:#7b2ff7;font-size:60px">ENTROU PRA HISTÓRIA</div></div>
+<div id="t1" class="clip title" data-start="4.48" data-duration="9.15" data-track-index="2"><div id="t1i" class="titlei">NOTA <em>99</em></div></div>
+<div id="i2" class="clip it" style="top:1160px" data-start="7.91" data-duration="5.72" data-track-index="4"><div id="i2i" class="tag" style="background:#d4a017;font-size:58px">A MAIOR NOTA DO SITE</div></div>
+<div id="i3" class="clip it" style="top:1280px" data-start="9.85" data-duration="3.78" data-track-index="4"><div id="i3i" class="chip" style="">empatado com Zelda (1998)</div></div>
+<div id="t2" class="clip title" data-start="13.63" data-duration="6.36" data-track-index="2"><div id="t2i" class="titlei">NOTA <em>10</em></div></div>
+<div id="i4" class="clip it" style="top:1160px" data-start="13.88" data-duration="6.12" data-track-index="4"><div id="i4i" class="tag" style="background:#2b6cb0;font-size:56px">IGN: 10 · GAMESPOT: 10</div></div>
+<div id="i5" class="clip it" style="top:1280px" data-start="18.18" data-duration="1.82" data-track-index="4"><div id="i5i" class="chip" style="">0 críticas negativas</div></div>
+<div id="t3" class="clip title" data-start="20.00" data-duration="3.26" data-track-index="2"><div id="t3i" class="titlei">GTA 5 <em>VS</em> GTA 6</div></div>
+<div id="i6" class="clip it" style="top:1160px" data-start="21.10" data-duration="2.16" data-track-index="4"><div id="i6i" class="tag" style="background:#ff2e88;font-size:60px">GTA 5: 97 · GTA 6: 99</div></div>
+<div id="t4" class="clip title" data-start="23.25" data-duration="2.72" data-track-index="2"><div id="t4i" class="titlei">MAS...</div></div>
+<div id="i7" class="clip it" style="top:1160px" data-start="24.27" data-duration="1.71" data-track-index="4"><div id="i7i" class="tag" style="background:#e63946;font-size:56px">NEM TUDO FOI PERFEITO</div></div>
+<div id="t5" class="clip title" data-start="25.97" data-duration="3.68" data-track-index="2"><div id="t5i" class="titlei">O QUE DEU <em>ERRADO?</em></div></div>
+<div id="i8" class="clip it" style="top:1160px" data-start="28.48" data-duration="1.17" data-track-index="4"><div id="i8i" class="tag" style="background:#7b2ff7;font-size:70px">NA PARTE 2 👀</div></div>
+<style>.cap{top:1420px !important}.vig{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(8,0,24,.55) 100%)}</style>
+<div id="vig" class="clip vig" data-start="0" data-duration="32.72" data-track-index="1"></div>
+<div id="t6" class="clip title" data-start="29.65" data-duration="3.07" data-track-index="2"><div id="t6i" class="titlei">PARTE <em>2</em> NO PERFIL!</div></div>
+<div id="i9" class="clip it" style="top:470px" data-start="29.70" data-duration="3.02" data-track-index="4"><div id="i9i" class="tag" style="background:#7b2ff7;font-size:84px">CONTINUA...</div></div>
+<div id="i10" class="clip it" style="top:700px" data-start="29.75" data-duration="2.97" data-track-index="4"><div id="i10i" class="tag" style="background:#3DF5FF;color:#12002b;font-size:110px;border-color:#12002b">+ SEGUIR</div></div>
+  <div id="cap0" class="clip cap" data-start="0.140" data-duration="1.799" data-track-index="3"><div id="capi0" class="capi"><span id="w0_0" class="cw">O</span> <span id="w0_1" class="cw">GTA</span> <span id="w0_2" class="cw">6 LANÇOU</span></div></div>
+<div id="cap1" class="clip cap" data-start="2.129" data-duration="0.461" data-track-index="3"><div id="capi1" class="capi"><span id="w1_0" class="cw">E</span> <span id="w1_1" class="cw">ELE</span> <span id="w1_2" class="cw">JÁ</span></div></div>
+<div id="cap2" class="clip cap" data-start="2.590" data-duration="0.811" data-track-index="3"><div id="capi2" class="capi"><span id="w2_0" class="cw">ENTROU</span> <span id="w2_1" class="cw">PRA</span> <span id="w2_2" class="cw">HISTÓRIA</span></div></div>
+<div id="cap3" class="clip cap" data-start="3.401" data-duration="1.163" data-track-index="3"><div id="capi3" class="capi"><span id="w3_0" class="cw">DOS</span> <span id="w3_1" class="cw">GAMES</span></div></div>
+<div id="cap4" class="clip cap" data-start="4.574" data-duration="1.174" data-track-index="3"><div id="capi4" class="capi"><span id="w4_0" class="cw">NO</span> <span id="w4_1" class="cw">METACRITIC</span> <span id="w4_2" class="cw">ELE</span></div></div>
+<div id="cap5" class="clip cap" data-start="5.748" data-duration="0.932" data-track-index="3"><div id="capi5" class="capi"><span id="w5_0" class="cw">TIROU</span> <span id="w5_1" class="cw">NOTA</span> <span id="w5_2" class="cw">NOVENTA</span></div></div>
+<div id="cap6" class="clip cap" data-start="6.680" data-duration="1.222" data-track-index="3"><div id="capi6" class="capi"><span id="w6_0" class="cw">E</span> <span id="w6_1" class="cw">NOVE</span> <span id="w6_2" class="cw">A</span></div></div>
+<div id="cap7" class="clip cap" data-start="7.902" data-duration="0.647" data-track-index="3"><div id="capi7" class="capi"><span id="w7_0" class="cw">MAIOR</span> <span id="w7_1" class="cw">NOTA</span> <span id="w7_2" class="cw">DO</span></div></div>
+<div id="cap8" class="clip cap" data-start="8.549" data-duration="1.293" data-track-index="3"><div id="capi8" class="capi"><span id="w8_0" class="cw">SITE</span> <span id="w8_1" class="cw">EMPATADO</span> <span id="w8_2" class="cw">COM</span></div></div>
+<div id="cap9" class="clip cap" data-start="9.842" data-duration="1.327" data-track-index="3"><div id="capi9" class="capi"><span id="w9_0" class="cw">ZELDA</span> <span id="w9_1" class="cw">OCARINA</span> <span id="w9_2" class="cw">OF</span></div></div>
+<div id="cap10" class="clip cap" data-start="11.169" data-duration="2.545" data-track-index="3"><div id="capi10" class="capi"><span id="w10_0" class="cw">TIME</span> <span id="w10_1" class="cw">DE</span> <span id="w10_2" class="cw">1998</span></div></div>
+<div id="cap11" class="clip cap" data-start="13.724" data-duration="0.723" data-track-index="3"><div id="capi11" class="capi"><span id="w11_0" class="cw">A</span> <span id="w11_1" class="cw">IGN</span> <span id="w11_2" class="cw">E</span></div></div>
+<div id="cap12" class="clip cap" data-start="14.447" data-duration="0.987" data-track-index="3"><div id="capi12" class="capi"><span id="w12_0" class="cw">A</span> <span id="w12_1" class="cw">GAMESPOT</span> <span id="w12_2" class="cw">DERAM</span></div></div>
+<div id="cap13" class="clip cap" data-start="15.434" data-duration="1.858" data-track-index="3"><div id="capi13" class="capi"><span id="w13_0" class="cw">NOTA</span> <span id="w13_1" class="cw">DEZ</span> <span id="w13_2" class="cw">E</span></div></div>
+<div id="cap14" class="clip cap" data-start="17.292" data-duration="1.239" data-track-index="3"><div id="capi14" class="capi"><span id="w14_0" class="cw">ATÉ</span> <span id="w14_1" class="cw">AGORA</span> <span id="w14_2" class="cw">NENHUMA</span></div></div>
+<div id="cap15" class="clip cap" data-start="18.531" data-duration="1.547" data-track-index="3"><div id="capi15" class="capi"><span id="w15_0" class="cw">CRÍTICA</span> <span id="w15_1" class="cw">NEGATIVA</span></div></div>
+<div id="cap16" class="clip cap" data-start="20.088" data-duration="0.998" data-track-index="3"><div id="capi16" class="capi"><span id="w16_0" class="cw">PRA</span> <span id="w16_1" class="cw">COMPARAR</span> <span id="w16_2" class="cw">O</span></div></div>
+<div id="cap17" class="clip cap" data-start="21.086" data-duration="1.272" data-track-index="3"><div id="capi17" class="capi"><span id="w17_0" class="cw">GTA</span> <span id="w17_1" class="cw">5 TIROU</span> <span id="w17_2" class="cw">NOVENTA</span></div></div>
+<div id="cap18" class="clip cap" data-start="22.358" data-duration="0.976" data-track-index="3"><div id="capi18" class="capi"><span id="w18_0" class="cw">E</span> <span id="w18_1" class="cw">SETE</span></div></div>
+<div id="cap19" class="clip cap" data-start="23.344" data-duration="0.768" data-track-index="3"><div id="capi19" class="capi"><span id="w19_0" class="cw">MAS</span> <span id="w19_1" class="cw">NEM</span> <span id="w19_2" class="cw">TUDO</span></div></div>
+<div id="cap20" class="clip cap" data-start="24.112" data-duration="0.735" data-track-index="3"><div id="capi20" class="capi"><span id="w20_0" class="cw">FOI</span> <span id="w20_1" class="cw">PERFEITO</span> <span id="w20_2" class="cw">NO</span></div></div>
+<div id="cap21" class="clip cap" data-start="24.847" data-duration="1.207" data-track-index="3"><div id="capi21" class="capi"><span id="w21_0" class="cw">LANÇAMENTO</span></div></div>
+<div id="cap22" class="clip cap" data-start="26.064" data-duration="0.482" data-track-index="3"><div id="capi22" class="capi"><span id="w22_0" class="cw">O</span> <span id="w22_1" class="cw">QUE</span> <span id="w22_2" class="cw">DEU</span></div></div>
+<div id="cap23" class="clip cap" data-start="26.546" data-duration="1.441" data-track-index="3"><div id="capi23" class="capi"><span id="w23_0" class="cw">ERRADO</span> <span id="w23_1" class="cw">EU</span> <span id="w23_2" class="cw">TE</span></div></div>
+<div id="cap24" class="clip cap" data-start="27.987" data-duration="0.801" data-track-index="3"><div id="capi24" class="capi"><span id="w24_0" class="cw">CONTO</span> <span id="w24_1" class="cw">NA</span> <span id="w24_2" class="cw">PARTE</span></div></div>
+<div id="cap25" class="clip cap" data-start="28.788" data-duration="0.943" data-track-index="3"><div id="capi25" class="capi"><span id="w25_0" class="cw">DOIS</span></div></div>
+<div id="cap26" class="clip cap" data-start="29.741" data-duration="0.823" data-track-index="3"><div id="capi26" class="capi"><span id="w26_0" class="cw">SEGUE</span> <span id="w26_1" class="cw">O</span> <span id="w26_2" class="cw">PERFIL</span></div></div>
+<div id="cap27" class="clip cap" data-start="30.564" data-duration="0.493" data-track-index="3"><div id="capi27" class="capi"><span id="w27_0" class="cw">PRA</span> <span id="w27_1" class="cw">VER</span> <span id="w27_2" class="cw">A</span></div></div>
+<div id="cap28" class="clip cap" data-start="31.057" data-duration="1.339" data-track-index="3"><div id="capi28" class="capi"><span id="w28_0" class="cw">PARTE</span> <span id="w28_1" class="cw">DOIS</span></div></div>
+  <audio id="mix" src="assets/audio/mix.wav" data-start="0" data-duration="32.72" data-track-index="9"></audio>
+</div>
+<script>window.__cfg = {"storm": [], "lightning": [], "animals": false, "rise": null, "flash": null, "tv": [[0, "game"], [4.484, "score"], [13.634, "score"], [19.997999999999998, "score"], [23.253999999999998, "glitch"], [25.974, "error"]], "poses": [[0, "cheer"], [4.484, "play"], [6.306, "shock"], [13.634, "cheer"], [19.997999999999998, "think"], [23.253999999999998, "shock"], [24.857, "facepalm"], [25.974, "facepalm"], [29.651, "point"]], "cams": [["front", 0, 4.484], ["tv", 4.484, 13.634], ["front", 13.634, 19.997999999999998], ["close", 19.997999999999998, 23.253999999999998], ["behind", 23.253999999999998, 25.974], ["front", 25.974, 29.651], ["pull", 29.651, 32.72]], "px": 0.75, "shots": [], "total": 32.72};</script>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#i1i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},3.03);
+tl.fromTo("#t1i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},4.48);
+tl.fromTo("#i2i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},7.91);
+tl.fromTo("#i3i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},9.85);
+tl.fromTo("#t2i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},13.63);
+tl.fromTo("#i4i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},13.88);
+tl.fromTo("#i5i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},18.18);
+tl.fromTo("#t3i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},20.00);
+tl.fromTo("#i6i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},21.10);
+tl.fromTo("#t4i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},23.25);
+tl.fromTo("#i7i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},24.27);
+tl.fromTo("#t5i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},25.97);
+tl.fromTo("#i8i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},28.48);
+tl.fromTo("#t6i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},29.65);
+tl.fromTo("#i9i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},29.70);
+tl.fromTo("#i10i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},29.75);
+tl.to("#i10i",{scale:1.1,duration:0.18,yoyo:true,repeat:5,ease:"sine.inOut"},30.10);
+tl.set("#w0_0",{color:"#FFD84D",scale:1.08},0.180);
+tl.set("#w0_0",{color:"#FFFFFF",scale:1},0.297);
+tl.set("#w0_1",{color:"#FFD84D",scale:1.08},0.268);
+tl.set("#w0_1",{color:"#FFFFFF",scale:1},0.659);
+tl.set("#w0_2",{color:"#FFD84D",scale:1.08},0.630);
+tl.set("#w0_2",{color:"#FFFFFF",scale:1},1.459);
+tl.fromTo("#capi0",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},0.140);
+tl.set("#w1_0",{color:"#FFD84D",scale:1.08},2.169);
+tl.set("#w1_0",{color:"#FFFFFF",scale:1},2.330);
+tl.set("#w1_1",{color:"#FFD84D",scale:1.08},2.301);
+tl.set("#w1_1",{color:"#FFFFFF",scale:1},2.495);
+tl.set("#w1_2",{color:"#FFD84D",scale:1.08},2.466);
+tl.set("#w1_2",{color:"#FFFFFF",scale:1},2.659);
+tl.fromTo("#capi1",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},2.129);
+tl.set("#w2_0",{color:"#FFD84D",scale:1.08},2.630);
+tl.set("#w2_0",{color:"#FFFFFF",scale:1},2.944);
+tl.set("#w2_1",{color:"#FFD84D",scale:1.08},2.915);
+tl.set("#w2_1",{color:"#FFFFFF",scale:1},3.087);
+tl.set("#w2_2",{color:"#FFD84D",scale:1.08},3.058);
+tl.set("#w2_2",{color:"#FFFFFF",scale:1},3.470);
+tl.fromTo("#capi2",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},2.590);
+tl.set("#w3_0",{color:"#FFD84D",scale:1.08},3.441);
+tl.set("#w3_0",{color:"#FFFFFF",scale:1},3.635);
+tl.set("#w3_1",{color:"#FFD84D",scale:1.08},3.606);
+tl.set("#w3_1",{color:"#FFFFFF",scale:1},4.084);
+tl.fromTo("#capi3",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},3.401);
+tl.set("#w4_0",{color:"#FFD84D",scale:1.08},4.614);
+tl.set("#w4_0",{color:"#FFFFFF",scale:1},4.775);
+tl.set("#w4_1",{color:"#FFD84D",scale:1.08},4.746);
+tl.set("#w4_1",{color:"#FFFFFF",scale:1},5.477);
+tl.set("#w4_2",{color:"#FFD84D",scale:1.08},5.645);
+tl.set("#w4_2",{color:"#FFFFFF",scale:1},5.817);
+tl.fromTo("#capi4",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},4.574);
+tl.set("#w5_0",{color:"#FFD84D",scale:1.08},5.788);
+tl.set("#w5_0",{color:"#FFFFFF",scale:1},6.058);
+tl.set("#w5_1",{color:"#FFD84D",scale:1.08},6.029);
+tl.set("#w5_1",{color:"#FFFFFF",scale:1},6.365);
+tl.set("#w5_2",{color:"#FFD84D",scale:1.08},6.336);
+tl.set("#w5_2",{color:"#FFFFFF",scale:1},6.749);
+tl.fromTo("#capi5",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},5.748);
+tl.set("#w6_0",{color:"#FFD84D",scale:1.08},6.720);
+tl.set("#w6_0",{color:"#FFFFFF",scale:1},6.782);
+tl.set("#w6_1",{color:"#FFD84D",scale:1.08},6.753);
+tl.set("#w6_1",{color:"#FFFFFF",scale:1},7.132);
+tl.set("#w6_2",{color:"#FFD84D",scale:1.08},7.843);
+tl.set("#w6_2",{color:"#FFFFFF",scale:1},7.971);
+tl.fromTo("#capi6",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},6.680);
+tl.set("#w7_0",{color:"#FFD84D",scale:1.08},7.942);
+tl.set("#w7_0",{color:"#FFFFFF",scale:1},8.267);
+tl.set("#w7_1",{color:"#FFD84D",scale:1.08},8.238);
+tl.set("#w7_1",{color:"#FFFFFF",scale:1},8.530);
+tl.set("#w7_2",{color:"#FFD84D",scale:1.08},8.501);
+tl.set("#w7_2",{color:"#FFFFFF",scale:1},8.618);
+tl.fromTo("#capi7",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},7.902);
+tl.set("#w8_0",{color:"#FFD84D",scale:1.08},8.589);
+tl.set("#w8_0",{color:"#FFFFFF",scale:1},9.023);
+tl.set("#w8_1",{color:"#FFD84D",scale:1.08},9.192);
+tl.set("#w8_1",{color:"#FFFFFF",scale:1},9.747);
+tl.set("#w8_2",{color:"#FFD84D",scale:1.08},9.718);
+tl.set("#w8_2",{color:"#FFFFFF",scale:1},9.911);
+tl.fromTo("#capi8",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},8.549);
+tl.set("#w9_0",{color:"#FFD84D",scale:1.08},9.882);
+tl.set("#w9_0",{color:"#FFFFFF",scale:1},10.262);
+tl.set("#w9_1",{color:"#FFD84D",scale:1.08},10.507);
+tl.set("#w9_1",{color:"#FFFFFF",scale:1},10.997);
+tl.set("#w9_2",{color:"#FFD84D",scale:1.08},10.968);
+tl.set("#w9_2",{color:"#FFFFFF",scale:1},11.238);
+tl.fromTo("#capi9",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},9.842);
+tl.set("#w10_0",{color:"#FFD84D",scale:1.08},11.209);
+tl.set("#w10_0",{color:"#FFFFFF",scale:1},11.534);
+tl.set("#w10_1",{color:"#FFD84D",scale:1.08},11.725);
+tl.set("#w10_1",{color:"#FFFFFF",scale:1},11.874);
+tl.set("#w10_2",{color:"#FFD84D",scale:1.08},11.845);
+tl.set("#w10_2",{color:"#FFFFFF",scale:1},13.234);
+tl.fromTo("#capi10",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},11.169);
+tl.set("#w11_0",{color:"#FFD84D",scale:1.08},13.764);
+tl.set("#w11_0",{color:"#FFFFFF",scale:1},13.935);
+tl.set("#w11_1",{color:"#FFD84D",scale:1.08},13.906);
+tl.set("#w11_1",{color:"#FFFFFF",scale:1},14.473);
+tl.set("#w11_2",{color:"#FFD84D",scale:1.08},14.444);
+tl.set("#w11_2",{color:"#FFFFFF",scale:1},14.516);
+tl.fromTo("#capi11",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},13.724);
+tl.set("#w12_0",{color:"#FFD84D",scale:1.08},14.487);
+tl.set("#w12_0",{color:"#FFFFFF",scale:1},14.593);
+tl.set("#w12_1",{color:"#FFD84D",scale:1.08},14.564);
+tl.set("#w12_1",{color:"#FFFFFF",scale:1},15.284);
+tl.set("#w12_2",{color:"#FFD84D",scale:1.08},15.255);
+tl.set("#w12_2",{color:"#FFFFFF",scale:1},15.503);
+tl.fromTo("#capi12",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},14.447);
+tl.set("#w13_0",{color:"#FFD84D",scale:1.08},15.474);
+tl.set("#w13_0",{color:"#FFFFFF",scale:1},15.788);
+tl.set("#w13_1",{color:"#FFD84D",scale:1.08},15.759);
+tl.set("#w13_1",{color:"#FFFFFF",scale:1},16.172);
+tl.set("#w13_2",{color:"#FFD84D",scale:1.08},16.883);
+tl.set("#w13_2",{color:"#FFFFFF",scale:1},17.164);
+tl.fromTo("#capi13",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},15.434);
+tl.set("#w14_0",{color:"#FFD84D",scale:1.08},17.332);
+tl.set("#w14_0",{color:"#FFFFFF",scale:1},17.646);
+tl.set("#w14_1",{color:"#FFD84D",scale:1.08},17.617);
+tl.set("#w14_1",{color:"#FFFFFF",scale:1},18.063);
+tl.set("#w14_2",{color:"#FFD84D",scale:1.08},18.209);
+tl.set("#w14_2",{color:"#FFFFFF",scale:1},18.600);
+tl.fromTo("#capi14",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},17.292);
+tl.set("#w15_0",{color:"#FFD84D",scale:1.08},18.571);
+tl.set("#w15_0",{color:"#FFFFFF",scale:1},18.973);
+tl.set("#w15_1",{color:"#FFD84D",scale:1.08},18.944);
+tl.set("#w15_1",{color:"#FFFFFF",scale:1},19.598);
+tl.fromTo("#capi15",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},18.531);
+tl.set("#w16_0",{color:"#FFD84D",scale:1.08},20.128);
+tl.set("#w16_0",{color:"#FFFFFF",scale:1},20.344);
+tl.set("#w16_1",{color:"#FFD84D",scale:1.08},20.314);
+tl.set("#w16_1",{color:"#FFFFFF",scale:1},20.826);
+tl.set("#w16_2",{color:"#FFD84D",scale:1.08},21.082);
+tl.set("#w16_2",{color:"#FFFFFF",scale:1},21.155);
+tl.fromTo("#capi16",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},20.088);
+tl.set("#w17_0",{color:"#FFD84D",scale:1.08},21.126);
+tl.set("#w17_0",{color:"#FFFFFF",scale:1},21.495);
+tl.set("#w17_1",{color:"#FFD84D",scale:1.08},21.466);
+tl.set("#w17_1",{color:"#FFFFFF",scale:1},22.076);
+tl.set("#w17_2",{color:"#FFD84D",scale:1.08},22.047);
+tl.set("#w17_2",{color:"#FFFFFF",scale:1},22.427);
+tl.fromTo("#capi17",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},21.086);
+tl.set("#w18_0",{color:"#FFD84D",scale:1.08},22.398);
+tl.set("#w18_0",{color:"#FFFFFF",scale:1},22.471);
+tl.set("#w18_1",{color:"#FFD84D",scale:1.08},22.442);
+tl.set("#w18_1",{color:"#FFFFFF",scale:1},22.854);
+tl.fromTo("#capi18",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},22.358);
+tl.set("#w19_0",{color:"#FFD84D",scale:1.08},23.384);
+tl.set("#w19_0",{color:"#FFFFFF",scale:1},23.677);
+tl.set("#w19_1",{color:"#FFD84D",scale:1.08},23.648);
+tl.set("#w19_1",{color:"#FFFFFF",scale:1},23.896);
+tl.set("#w19_2",{color:"#FFD84D",scale:1.08},23.867);
+tl.set("#w19_2",{color:"#FFFFFF",scale:1},24.181);
+tl.fromTo("#capi19",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},23.344);
+tl.set("#w20_0",{color:"#FFD84D",scale:1.08},24.152);
+tl.set("#w20_0",{color:"#FFFFFF",scale:1},24.324);
+tl.set("#w20_1",{color:"#FFD84D",scale:1.08},24.295);
+tl.set("#w20_1",{color:"#FFFFFF",scale:1},24.828);
+tl.set("#w20_2",{color:"#FFD84D",scale:1.08},24.799);
+tl.set("#w20_2",{color:"#FFFFFF",scale:1},24.916);
+tl.fromTo("#capi20",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},24.112);
+tl.set("#w21_0",{color:"#FFD84D",scale:1.08},24.887);
+tl.set("#w21_0",{color:"#FFFFFF",scale:1},25.574);
+tl.fromTo("#capi21",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},24.847);
+tl.set("#w22_0",{color:"#FFD84D",scale:1.08},26.104);
+tl.set("#w22_0",{color:"#FFFFFF",scale:1},26.253);
+tl.set("#w22_1",{color:"#FFD84D",scale:1.08},26.224);
+tl.set("#w22_1",{color:"#FFFFFF",scale:1},26.407);
+tl.set("#w22_2",{color:"#FFD84D",scale:1.08},26.378);
+tl.set("#w22_2",{color:"#FFFFFF",scale:1},26.615);
+tl.fromTo("#capi22",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},26.064);
+tl.set("#w23_0",{color:"#FFD84D",scale:1.08},26.586);
+tl.set("#w23_0",{color:"#FFFFFF",scale:1},27.021);
+tl.set("#w23_1",{color:"#FFD84D",scale:1.08},27.731);
+tl.set("#w23_1",{color:"#FFFFFF",scale:1},27.936);
+tl.set("#w23_2",{color:"#FFD84D",scale:1.08},27.907);
+tl.set("#w23_2",{color:"#FFFFFF",scale:1},28.056);
+tl.fromTo("#capi23",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},26.546);
+tl.set("#w24_0",{color:"#FFD84D",scale:1.08},28.027);
+tl.set("#w24_0",{color:"#FFFFFF",scale:1},28.407);
+tl.set("#w24_1",{color:"#FFD84D",scale:1.08},28.378);
+tl.set("#w24_1",{color:"#FFFFFF",scale:1},28.539);
+tl.set("#w24_2",{color:"#FFD84D",scale:1.08},28.510);
+tl.set("#w24_2",{color:"#FFFFFF",scale:1},28.857);
+tl.fromTo("#capi24",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},27.987);
+tl.set("#w25_0",{color:"#FFD84D",scale:1.08},28.828);
+tl.set("#w25_0",{color:"#FFFFFF",scale:1},29.251);
+tl.fromTo("#capi25",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},28.788);
+tl.set("#w26_0",{color:"#FFD84D",scale:1.08},29.781);
+tl.set("#w26_0",{color:"#FFFFFF",scale:1},30.194);
+tl.set("#w26_1",{color:"#FFD84D",scale:1.08},30.165);
+tl.set("#w26_1",{color:"#FFFFFF",scale:1},30.238);
+tl.set("#w26_2",{color:"#FFD84D",scale:1.08},30.209);
+tl.set("#w26_2",{color:"#FFFFFF",scale:1},30.633);
+tl.fromTo("#capi26",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},29.741);
+tl.set("#w27_0",{color:"#FFD84D",scale:1.08},30.604);
+tl.set("#w27_0",{color:"#FFFFFF",scale:1},30.819);
+tl.set("#w27_1",{color:"#FFD84D",scale:1.08},30.790);
+tl.set("#w27_1",{color:"#FFFFFF",scale:1},31.028);
+tl.set("#w27_2",{color:"#FFD84D",scale:1.08},30.999);
+tl.set("#w27_2",{color:"#FFFFFF",scale:1},31.126);
+tl.fromTo("#capi27",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},30.564);
+tl.set("#w28_0",{color:"#FFD84D",scale:1.08},31.097);
+tl.set("#w28_0",{color:"#FFFFFF",scale:1},31.488);
+tl.set("#w28_1",{color:"#FFD84D",scale:1.08},31.459);
+tl.set("#w28_1",{color:"#FFFFFF",scale:1},31.916);
+tl.fromTo("#capi28",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},31.057);
+window.__timelines["main"] = tl;
+tl.seek(0);
+</script>
+<script type="module" src="assets/scene.js"></script>
+</body>
+</html>
