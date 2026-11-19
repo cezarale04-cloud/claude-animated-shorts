@@ -50,6 +50,13 @@ npx hyperframes render -o ../renders/gta6-parte-4.mp4 --quality delivery
 - Não usar logo, imagens, personagens ou música da Rockstar. Só cenário próprio e texto.
 - Só fatos confirmados pela Rockstar ou pela Game Informer (set/2026). Números da Rockstar aparecem com "segundo a Rockstar" na tela. Nada de boatos (preço do Brasil, sistema de procurado etc.).
 - Gancho no primeiro quadro, legenda grande, texto dentro da área segura (entre 168 e 1330 px de altura), "PARTE N" no topo e chamada para a próxima parte no fim.
+- **Pedido do usuário (19/11/2026): todo vídeo novo para publicar sai dividido em 2 ou 3 partes**, para a pessoa voltar ao perfil e seguir. Cada parte tem "PARTE N/M" no topo, termina num gancho ("o que acontece depois?") e pede para seguir para ver a próxima. A última parte fecha a história e pede curtir e seguir. Cada parte tem sua própria descrição, e a descrição avisa que é uma série.
+
+## Outros vídeos já entregues (fora da série de 8)
+
+- `compras.py`: contagem regressiva, supermercado e maratona no sofá (personagem 3D, `common/scene_compras.js`). Descrição em `DESCRICAO-CONTAGEM.md`.
+- `crescer.py`: "GTA 6 é a chance de crescer na internet com o Claude". Descrição em `DESCRICAO-CRESCER.md`.
+- `longo.py`: vídeo de 10 min para YouTube (16:9, `common/engine_wide.py`). Pausado a pedido do usuário; o render é lento (cerca de 1 quadro por segundo). Descrição e capitulos em `DESCRICAO-LONGO.md`.
 
 ## Fatos usados (com fonte)
 
