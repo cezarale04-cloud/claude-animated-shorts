@@ -82,3 +82,29 @@ npx hyperframes render -o ../renders/gta6-parte-4.mp4 --quality delivery
 - Capa: o primeiro quadro de cada vídeo.
 
 As descrições prontas de YouTube e Instagram das 8 partes estão em `DESCRICOES.md`.
+
+## Estado em 19/11/2026 (passagem para a sessão "GTA")
+
+**Receita fixa do usuário:** está em `/CLAUDE.md` na raiz do repositório. Todo vídeo, em qualquer assunto, sai em série de 2 ou 3 partes (30 a 45 s), com gancho no começo e no fim de cada parte e descrição de cada parte (YouTube e Instagram, 5 hashtags cada, mais comentário fixado). O usuário deixou o crescimento do canal "sob responsabilidade" do Claude.
+
+**Motor:** `common/engine.py` aceita `next_part=N`: a parte termina com "Segue o perfil pra ver a parte N!" (cena "CONTINUA... + SEGUIR"). Sem `next_part`, termina com o curtir e seguir de sempre.
+
+**Entregues nesta sessão (MP4 fora do git, em `renders/`):**
+- `serie-contagem-parte1.mp4` e `serie-contagem-parte2.mp4` (`compras_serie.py 1|2`, cenário `common/scene_compras.js`): contagem, supermercado e maratona. Descrições nas mensagens do chat e em `DESCRICOES-SERIES.md`.
+- Versões inteiras antigas: `gta6-contagem-maratona.mp4` (`compras.py`) e `gta6-cresca-na-internet.mp4` (`crescer.py`).
+- `crescer_serie.py 1|2` está pronto e conferido, mas **não foi renderizado** (o usuário cancelou).
+- `longo.py` (10 min, 16:9) está pausado.
+
+**Série em andamento: "GTA 6 lançou" (3 partes), `bugs_serie.py 1|2|3`, cenário `common/scene_sala.js`:**
+- O personagem 3D fica sentado no sofá reagindo (poses play/shock/cheer/facepalm/think/point) e a TV muda de tela (score/error/loading/off/fps/walls/float/popin/update/glitch/game). As câmeras vêm do cfg (front/close/tv/behind/wide/pull).
+- Parte 1: Metacritic 99, a maior nota do site, empatado com Zelda Ocarina of Time (1998); IGN e GameSpot 10; nenhuma crítica negativa até agora; GTA 5 tinha 97. Gancho para a parte 2.
+- Parte 2: a PSN caiu horas antes da liberação no ocidente ("serviços ocupados"); milhares de reclamações no DownDetector; relatos de PS5 desligando (não confirmados pela Sony nem pela Rockstar); 30 fps em todos os consoles, até no PS5 Pro.
+- Parte 3: bugs relatados (NPC andando contra a parede, objeto flutuando depois de trocar Jason e Lucia, roupa que aparece atrasada), nenhum confirmado pela Rockstar; 2 atualizações antes do lançamento sem notas.
+- Fontes: Bloomberg, Technobezz, Dot Esports, Hollywood Reporter, Forbes, ComicBook e sites de rastreio de bugs. Sempre usar "jogadores relatam" e "não confirmado".
+- **Feito:** quadros da parte 1 conferidos; luz da TV no modo score trocada de verde para lilás; texto do Zelda encurtado.
+- **Falta:** rodar `python3 bugs_serie.py 1`, `2` e `3`, tirar quadros das 3 partes (as partes 2 e 3 ainda não foram vistas), corrigir o que precisar, renderizar com `npx hyperframes render -o ../renders/serie-bugs-parteN.mp4 --quality delivery` e escrever as descrições das 3 partes.
+
+**Outras notas:**
+- O render é lento (cerca de 1 quadro por segundo com o 3D); um Short de 35 s leva de 20 a 30 min. Não rode snapshot junto com render.
+- A live do Bistecone (cortes top 5) não foi possível: o YouTube pede login contra robô e o contorno foi bloqueado. O usuário pode mandar trechos gravados da tela. Formato pedido: "TOP N" no canto esquerdo, ordem aleatória com o TOP 1 no fim, crédito ao streamer, e checar se o streamer libera cortes.
+- `PLANO.md` tem o calendário e as próximas séries (T-Rex, furacão, avião, chiclete, Terra parando).
