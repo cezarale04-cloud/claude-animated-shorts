@@ -32,14 +32,17 @@ async def _tts_one(text, path, voice_name=VOICE, rate="+14%"):
     return words
 
 
-def voice(lines, gaps, work, voice_name=VOICE, rate="+14%"):
+def voice(lines, gaps, work, voice_name=VOICE, rate="+14%", fx=None):
+    # rate: one value, or one per line (varied rates sound less uniform / less synthetic)
+    # fx: ffmpeg audio filter applied to the voice track (e.g. mic EQ, compression, small room)
+    rates = list(rate) + [rate[-1]] * len(lines) if isinstance(rate, (list, tuple)) else [rate] * len(lines)
     os.makedirs(work, exist_ok=True)
     cache = os.path.join(work, "lines.json")
     data = json.load(open(cache)) if os.path.exists(cache) else None
-    if not data or [d["text"] for d in data] != lines or any(d.get("voice") != voice_name for d in data):
+    if not data or [d["text"] for d in data] != lines or any(d.get("voice") != voice_name or d.get("rate", "+14%") != rates[i] for i, d in enumerate(data)):
         data = []
         for i, t in enumerate(lines):
-            data.append(dict(text=t, voice=voice_name, words=asyncio.run(_tts_one(t, f"{work}/l{i}.mp3", voice_name, rate))))
+            data.append(dict(text=t, voice=voice_name, rate=rates[i], words=asyncio.run(_tts_one(t, f"{work}/l{i}.mp3", voice_name, rates[i]))))
         json.dump(data, open(cache, "w"), ensure_ascii=False, indent=1)
     t = 0.15
     out = []
@@ -59,11 +62,14 @@ def voice(lines, gaps, work, voice_name=VOICE, rate="+14%"):
         flt.append(f"[{i}]adelay={d}|{d}[a{i}]")
     flt.append("".join(f"[a{i}]" for i in range(len(out))) + f"amix=inputs={len(out)}:normalize=0,apad,atrim=0:{total}[o]")
     sh("ffmpeg", "-y", "-v", "error", *ins, "-filter_complex", ";".join(flt), "-map", "[o]", "-ar", str(SR), f"{work}/voice.wav")
+    if fx:
+        sh("ffmpeg", "-y", "-v", "error", "-i", f"{work}/voice.wav", "-af", f"{fx},atrim=0:{total}", "-ar", str(SR), f"{work}/voice_fx.wav")
+        os.replace(f"{work}/voice_fx.wav", f"{work}/voice.wav")
     return out, total
 
 
 class Video:
-    def __init__(self, name, lines, gaps, voice_name=VOICE, rate="+14%", hi="#3DF5FF", next_part=None):
+    def __init__(self, name, lines, gaps, voice_name=VOICE, rate="+14%", hi="#3DF5FF", next_part=None, end_line=None, fx=None):
         # next_part=N: the video is part of a series; it ends asking to follow for part N instead of the like scene
         self.next_part = next_part
         self.hi = hi
@@ -76,9 +82,10 @@ class Video:
             shutil.copy(os.path.join(ROOT, f), self.dir)
         shutil.copy(os.path.join(HERE, "scene.js"), os.path.join(self.dir, "assets", "scene.js"))
         end = f"Segue o perfil pra ver a parte {['', 'um', 'dois', 'três', 'quatro'][next_part]}!" if next_part else LIKE_LINE
+        end = end_line or end
         lines = list(lines) + [end]
         gaps = list(gaps) + [0.4] * (len(lines) - len(gaps))
-        self.lines, self.total = voice(lines, gaps, self.work, voice_name, rate)
+        self.lines, self.total = voice(lines, gaps, self.work, voice_name, rate, fx)
         self.html, self.js, self.cues = [], [], []
         self.shots, self.cfg = [], {"storm": [], "lightning": [], "animals": False, "rise": None, "flash": None}
         self.n = 0

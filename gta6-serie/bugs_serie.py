@@ -23,58 +23,66 @@ def chip(word, txt, top=1280, anim="up", cue="pop"):
 
 if PART == 1:
     S = [
-        ("O GTA 6 lançou. E ele já entrou pra história dos games.", "GTA 6 <em>LANÇOU!</em>", "front", [(None, "game")], [(None, "cheer")],
+        ("Mano, o GTA 6 saiu. E ele já entrou pra história.", "GTA 6 <em>LANÇOU!</em>", "front", [(None, "game")], [(None, "cheer")],
          [tag("história", "ENTROU PRA HISTÓRIA", PURP, size=60)]),
-        ("No Metacritic, ele tirou nota noventa e nove. A maior nota do site, empatado com Zelda: Ocarina of Time, de 1998.", "NOTA <em>99</em>", "tv",
+        ("No Metacritic, ele tirou noventa e nove. É a maior nota do site, empatado com Zelda Ocarina of Time, lá de 1998.", "NOTA <em>99</em>", "tv",
          [(None, "score")], [(None, "play"), ("noventa", "shock")],
          [tag("maior", "A MAIOR NOTA DO SITE", GOLD, size=58), chip("Zelda", "empatado com Zelda (1998)")]),
-        ("A IGN e a GameSpot deram nota dez. E, até agora, nenhuma crítica negativa.", "NOTA <em>10</em>", "front", [(None, "score")], [(None, "cheer")],
+        ("IGN deu dez. GameSpot deu dez. E até agora? Nenhuma crítica negativa.", "NOTA <em>10</em>", "front", [(None, "score")], [(None, "cheer")],
          [tag("IGN", "IGN: 10 · GAMESPOT: 10", BLUE, size=56), chip("nenhuma", "0 críticas negativas")]),
-        ("Pra comparar: o GTA 5 tirou noventa e sete.", "GTA 5 <em>VS</em> GTA 6", "close", [(None, "score")], [(None, "think")],
+        ("Só pra você ter ideia, o GTA 5 tirou noventa e sete.", "GTA 5 <em>VS</em> GTA 6", "close", [(None, "score")], [(None, "think")],
          [tag("GTA", "GTA 5: 97 · GTA 6: 99", PINK, size=60)]),
-        ("Mas nem tudo foi perfeito no lançamento...", "MAS...", "behind", [(None, "glitch")], [(None, "shock"), ("lançamento", "facepalm")],
+        ("Só que nem tudo foi perfeito no lançamento, viu?", "MAS...", "behind", [(None, "glitch")], [(None, "shock"), ("lançamento", "facepalm")],
          [tag("perfeito", "NEM TUDO FOI PERFEITO", RED, size=56)]),
-        ("O que deu errado? Eu te conto na parte dois.", "O QUE DEU <em>ERRADO?</em>", "front", [(None, "error")], [(None, "facepalm")],
+        ("E o que deu errado, eu te mostro na parte dois.", "O QUE DEU <em>ERRADO?</em>", "front", [(None, "error")], [(None, "facepalm")],
          [tag("parte", "NA PARTE 2 👀", PURP, size=70)]),
     ]
 elif PART == 2:
     S = [
-        ("Parte dois: o que deu errado no lançamento do GTA 6.", "O QUE DEU <em>ERRADO?</em>", "front", [(None, "error")], [(None, "facepalm")],
+        ("Parte dois. Bora ver o que deu errado no lançamento do GTA 6.", "O QUE DEU <em>ERRADO?</em>", "front", [(None, "error")], [(None, "facepalm")],
          [tag(None, "PARTE 2", PURP, size=80, anim="fade", cue=None)]),
-        ("Horas antes de liberar no ocidente, a rede do PlayStation caiu. Muita gente viu a mensagem: serviços ocupados.", "A REDE <em>CAIU</em>", "tv",
+        ("Horas antes de liberar aqui no ocidente, a rede do PlayStation simplesmente caiu. E pra muita gente apareceu: serviços ocupados.", "A REDE <em>CAIU</em>", "tv",
          [(None, "loading"), ("caiu", "error")], [(None, "think"), ("caiu", "shock")],
          [tag("caiu", "A REDE DO PLAYSTATION CAIU", RED, size=52), chip("serviços", "“serviços ocupados”")]),
-        ("O site DownDetector recebeu milhares de reclamações de quem não conseguia entrar.", "<em>MILHARES</em> DE RECLAMAÇÕES", "front",
+        ("O DownDetector recebeu milhares de reclamações de gente que não conseguia entrar.", "<em>MILHARES</em> DE RECLAMAÇÕES", "front",
          [(None, "error")], [(None, "facepalm")], [tag("milhares", "MILHARES DE RECLAMAÇÕES", BLUE, size=54), chip("DownDetector", "segundo o DownDetector")]),
-        ("E tem jogador dizendo que o PS5 desligou sozinho depois de abrir o jogo.", "O PS5 <em>DESLIGOU?</em>", "behind",
+        ("Tem jogador falando até que o PS5 desligou sozinho depois de abrir o jogo.", "O PS5 <em>DESLIGOU?</em>", "behind",
          [(None, "loading"), ("desligou", "off")], [(None, "play"), ("desligou", "shock")], [tag("desligou", "DESLIGOU SOZINHO?!", RED, size=60)]),
-        ("Mas atenção: nem a Sony nem a Rockstar confirmaram esse problema.", "<em>ATENÇÃO</em>", "front", [(None, "off")], [(None, "think")],
+        ("Mas calma: nem a Sony nem a Rockstar confirmaram isso.", "<em>ATENÇÃO</em>", "front", [(None, "off")], [(None, "think")],
          [tag("confirmaram", "⚠ NÃO CONFIRMADO", GOLD, size=64)]),
-        ("Outra crítica: o jogo roda a trinta quadros por segundo em todos os consoles. Até no PS5 Pro.", "<em>30</em> FPS", "tv",
+        ("Outra reclamação: o jogo roda a trinta quadros por segundo em todo console. Até no PS5 Pro.", "<em>30</em> FPS", "tv",
          [(None, "fps")], [(None, "point")], [tag("trinta", "30 FPS EM TODOS", PINK, size=62), chip("Pro", "até no PS5 Pro")]),
-        ("E os bugs mais estranhos que os jogadores já acharam? Estão na parte três.", "OS BUGS <em>MAIS ESTRANHOS</em>", "close",
+        ("E os bugs mais bizarros que a galera já achou? Isso fica pra parte três.", "OS BUGS <em>MAIS ESTRANHOS</em>", "close",
          [(None, "glitch")], [(None, "shock")], [tag("parte", "NA PARTE 3 👀", PURP, size=70)]),
     ]
 else:
     S = [
-        ("Parte três: os bugs mais estranhos do GTA 6, até agora.", "BUGS <em>ESTRANHOS</em>", "front", [(None, "glitch")], [(None, "play")],
+        ("Parte três. Os bugs mais bizarros do GTA 6 até agora.", "BUGS <em>ESTRANHOS</em>", "front", [(None, "glitch")], [(None, "play")],
          [tag(None, "PARTE 3", PURP, size=80, anim="fade", cue=None)]),
-        ("Jogadores relatam pedestres andando direto contra a parede. Sem parar.", "BUG <em>1</em>", "tv", [(None, "walls")],
-         [(None, "play"), ("parede", "point"), ("Sem", "cheer")], [tag("pedestres", "NPC vs PAREDE", BLUE, size=64)]),
-        ("Teve gente vendo um objeto flutuando no ar, depois de trocar entre o Jason e a Lucia.", "BUG <em>2</em>", "behind", [(None, "float")],
+        ("Tem gente mostrando pedestre andando direto contra a parede. E não para nunca.", "BUG <em>1</em>", "tv", [(None, "walls")],
+         [(None, "play"), ("parede", "point"), ("nunca", "cheer")], [tag("pedestre", "NPC vs PAREDE", BLUE, size=64)]),
+        ("Teve jogador vendo objeto flutuando no ar depois de trocar do Jason pra Lucia.", "BUG <em>2</em>", "behind", [(None, "float")],
          [(None, "play"), ("flutuando", "shock")], [tag("flutuando", "FLUTUANDO NO AR?!", PINK, size=60), chip("Jason", "depois de trocar de personagem")]),
-        ("E roupas que só aparecem um segundo depois do personagem surgir na tela.", "BUG <em>3</em>", "tv", [(None, "popin")],
-         [(None, "facepalm"), ("surgir", "cheer")], [tag("roupas", "CADÊ A ROUPA? 😂", GOLD, size=62)]),
-        ("Nenhum desses bugs foi confirmado pela Rockstar. E o jogo recebeu duas atualizações antes do lançamento, sem nenhuma nota explicando o que mudou.",
+        ("E roupa que só aparece um segundo depois do personagem surgir na tela.", "BUG <em>3</em>", "tv", [(None, "popin")],
+         [(None, "facepalm"), ("surgir", "cheer")], [tag("roupa", "CADÊ A ROUPA? 😂", GOLD, size=62)]),
+        ("Detalhe: a Rockstar não confirmou nenhum desses bugs. E o jogo recebeu duas atualizações antes de lançar, sem nenhuma nota dizendo o que mudou.",
          "<em>MISTÉRIO</em>", "front", [(None, "glitch"), ("duas", "update")], [(None, "think")],
-         [tag("confirmado", "⚠ NÃO CONFIRMADOS", RED, size=60), chip("duas", "2 atualizações · nenhuma nota")]),
-        ("E você? Já achou algum bug no GTA 6? Comenta aqui!", "E <em>VOCÊ?</em>", "close", [(None, "game")], [(None, "point")],
+         [tag("confirmou", "⚠ NÃO CONFIRMADOS", RED, size=60), chip("duas", "2 atualizações · nenhuma nota")]),
+        ("E aí, já achou algum bug no GTA 6? Comenta aqui que eu quero ver.", "E <em>VOCÊ?</em>", "close", [(None, "game")], [(None, "point")],
          [("Comenta", "💬 COMENTA O SEU BUG!", "cta", "", 1160, "pop", "pop")]),
     ]
 
 LINES = [s[0] for s in S]
-GAPS = [0] + [0.4] * (len(S) - 1)
-V = Video(f"bugs{PART}", LINES, GAPS, rate="+14%", hi="#FFD84D", next_part=(PART + 1 if PART < 3 else None))
+# Natural delivery (the user asked that it must not sound AI-made): varied pauses and speeds per line,
+# casual end line, and a mic-like voice chain (EQ, compression, small room) instead of the clean TTS signal.
+GAPS = [0, 0.32, 0.45, 0.28, 0.5, 0.36, 0.42, 0.3][: len(S)]
+RATES = ["+10%", "+6%", "+12%", "+4%", "+9%", "+7%", "+11%", "+5%"]
+END_LINE = {1: "Segue aí pra não perder a parte dois.", 2: "Segue o perfil que a parte três já tá lá.",
+            3: "Curte o vídeo, deixa o like e segue pra mais GTA 6!"}[PART]
+FX = ("highpass=f=75,equalizer=f=180:t=q:w=1:g=2.5,equalizer=f=3200:t=q:w=1.4:g=2,"
+      "acompressor=threshold=-20dB:ratio=3:attack=6:release=90:makeup=2,aecho=0.85:0.6:23|37:0.07|0.04")
+V = Video(f"bugs{PART}", LINES, GAPS, voice_name="pt-BR-ThalitaMultilingualNeural", rate=RATES, hi="#FFD84D",
+          next_part=(PART + 1 if PART < 3 else None), end_line=END_LINE, fx=FX)
 shutil.copy(os.path.join(HERE, "scene_sala.js"), os.path.join(V.dir, "assets", "scene.js"))
 E = V.scene_end
 
