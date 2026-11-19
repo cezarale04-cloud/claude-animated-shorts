@@ -63,7 +63,9 @@ def voice(lines, gaps, work, voice_name=VOICE, rate="+14%"):
 
 
 class Video:
-    def __init__(self, name, lines, gaps, voice_name=VOICE, rate="+14%", hi="#3DF5FF"):
+    def __init__(self, name, lines, gaps, voice_name=VOICE, rate="+14%", hi="#3DF5FF", next_part=None):
+        # next_part=N: the video is part of a series; it ends asking to follow for part N instead of the like scene
+        self.next_part = next_part
         self.hi = hi
         self.name = name
         self.dir = os.path.join(ROOT, name)
@@ -73,7 +75,8 @@ class Video:
         for f in ["hyperframes.json", "package.json", "CLAUDE.md", "AGENTS.md"]:
             shutil.copy(os.path.join(ROOT, f), self.dir)
         shutil.copy(os.path.join(HERE, "scene.js"), os.path.join(self.dir, "assets", "scene.js"))
-        lines = list(lines) + [LIKE_LINE]
+        end = f"Segue o perfil pra ver a parte {['', 'um', 'dois', 'três', 'quatro'][next_part]}!" if next_part else LIKE_LINE
+        lines = list(lines) + [end]
         gaps = list(gaps) + [0.4] * (len(lines) - len(gaps))
         self.lines, self.total = voice(lines, gaps, self.work, voice_name, rate)
         self.html, self.js, self.cues = [], [], []
@@ -173,7 +176,17 @@ class Video:
             js.append(f'tl.fromTo("#capi{ci}",{{scale:0.82,y:14}},{{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"}},{s:.3f});')
         return out, js
 
+    def next_scene(self):
+        i = len(self.lines) - 1
+        s = self.L(i) - 0.1
+        self.title(i, f"PARTE <em>{self.next_part}</em> NO PERFIL!")
+        self.item(s + 0.05, self.total, 470, "CONTINUA...", cls="tag", anim="stamp", style="background:#7b2ff7;font-size:84px", cue="stamp")
+        iid = self.item(self.at(i, "Segue") - 0.05, self.total, 700, "+ SEGUIR", cls="tag", anim="stamp", style="background:#3DF5FF;color:#12002b;font-size:110px;border-color:#12002b", cue="stamp")
+        self.js.append(f'tl.to("#{iid}i",{{scale:1.1,duration:0.18,yoyo:true,repeat:5,ease:"sine.inOut"}},{self.at(i, "Segue") + 0.3:.2f});')
+
     def like_scene(self):
+        if self.next_part:
+            return self.next_scene()
         i = len(self.lines) - 1
         s = self.L(i) - 0.1
         self.title(i, "CURTE E <em>SEGUE!</em>")
