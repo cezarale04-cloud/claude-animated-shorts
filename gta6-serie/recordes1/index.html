@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="assets/lib/gsap.min.js"></script>
+<style>
+:root { --pink:#ff2e88; --cyan:#3DF5FF; --yel:#ffd84d; --ink:#12002b; --font-display:"Archivo Black", sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:1080px; height:1920px; overflow:hidden; background:#1a0b3d; }
+#root { position:relative; width:1080px; height:1920px; font-family:var(--font-display); overflow:hidden; }
+#stage { position:absolute; inset:0; }
+#stage canvas { display:block; width:1080px; height:1920px; }
+.partb { position:absolute; left:0; right:0; top:196px; display:flex; justify-content:center; z-index:9; }
+.parti { font-family:"Inter", sans-serif; font-weight:900; font-size:28px; letter-spacing:3px; color:var(--ink); background:var(--yel); padding:6px 20px; border-radius:10px; }
+.title { position:absolute; left:0; right:0; top:270px; display:flex; justify-content:center; z-index:10; }
+.titlei { text-align:center; color:#fff; font-size:72px; line-height:1.05; -webkit-text-stroke:14px var(--ink); paint-order:stroke fill; text-shadow:0 0 30px rgba(255,46,136,.8); }
+.titlei em { font-style:normal; color:var(--cyan); }
+.cap { position:absolute; left:130px; right:130px; top:1170px; display:flex; justify-content:center; z-index:12; }
+.capi { text-align:center; font-size:64px; line-height:1.1; color:#fff; -webkit-text-stroke:12px #000; paint-order:stroke fill; }
+.cw { display:inline-block; }
+.it { position:absolute; left:0; right:0; display:flex; justify-content:center; z-index:11; }
+.hero { text-align:center; font-size:250px; line-height:0.95; color:#fff; -webkit-text-stroke:20px var(--ink); paint-order:stroke fill; text-shadow:0 0 60px var(--pink), 0 0 120px var(--pink); }
+.hero em { font-style:normal; color:var(--cyan); }
+.big { font-size:190px; line-height:1; color:#fff; -webkit-text-stroke:18px var(--ink); paint-order:stroke fill; text-shadow:0 0 50px var(--pink); }
+.big small { font-size:120px; color:var(--cyan); }
+.chip { background:var(--ink); color:#fff; font-size:46px; padding:12px 32px; border-radius:40px; border:4px solid var(--cyan); text-align:center; }
+.chip.red { border-color:#ff4d4d; color:#ff8a8a; }
+.note { font-family:"Inter", sans-serif; font-weight:700; font-size:28px; color:#fff; background:rgba(18,0,43,.78); padding:6px 18px; border-radius:20px; }
+.tag { color:#fff; font-size:66px; padding:10px 34px; border-radius:18px; border:6px solid #fff; box-shadow:0 10px 0 rgba(0,0,0,.35); background:var(--pink); }
+.tagsm { color:#fff; font-size:44px; padding:8px 24px; border-radius:14px; border:5px solid #fff; box-shadow:0 8px 0 rgba(0,0,0,.35); background:#7b2ff7; }
+.cta { display:flex; align-items:center; gap:22px; background:var(--pink); color:#fff; font-size:64px; padding:18px 44px; border-radius:24px; border:7px solid #fff; }
+.arrow { width:0; height:0; border-left:26px solid transparent; border-right:26px solid transparent; border-top:40px solid #fff; }
+.arrowr { width:0; height:0; border-top:26px solid transparent; border-bottom:26px solid transparent; border-left:40px solid #fff; }
+.vs { display:flex; align-items:center; gap:30px; }
+.vs .card { background:#fff; color:var(--ink); font-size:84px; padding:20px 34px; border-radius:24px; border:8px solid var(--cyan); }
+.vs .card.b { border-color:var(--pink); background:var(--ink); color:#fff; box-shadow:0 0 50px var(--pink); }
+.vs .x { font-size:90px; color:var(--yel); -webkit-text-stroke:12px var(--ink); paint-order:stroke fill; }
+.strike { position:relative; }
+.strike::after { content:""; position:absolute; left:-6%; right:-6%; top:50%; height:12px; background:#ff4d4d; transform:rotate(-6deg); border-radius:6px; }
+.mapcmp { display:flex; align-items:flex-end; gap:40px; }
+.mapcmp .m { border:7px solid #fff; border-radius:14px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:46px; text-align:center; }
+.mapcmp .a { width:230px; height:230px; background:rgba(61,245,255,.35); }
+.mapcmp .b { width:325px; height:325px; background:rgba(255,46,136,.45); box-shadow:0 0 50px var(--pink); }
+.bars { position:relative; width:820px; }
+.bars .track { height:28px; border-radius:20px; background:rgba(18,0,43,.75); border:5px solid #fff; overflow:hidden; }
+.bars .fill { height:100%; background:linear-gradient(90deg,var(--pink),var(--cyan)); transform-origin:left center; }
+.bars .ticks { display:flex; justify-content:space-between; color:#fff; font-size:38px; margin-top:12px; -webkit-text-stroke:8px var(--ink); paint-order:stroke fill; text-align:center; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px 24px; width:880px; }
+.phone { width:340px; height:600px; border-radius:46px; background:#0d0221; border:10px solid #fff; position:relative; overflow:hidden; box-shadow:0 0 60px var(--pink); }
+.phone .scr { position:absolute; inset:0; background:linear-gradient(180deg,#ff2e88,#7b2ff7 55%,#12002b); }
+.phone .user { position:absolute; left:22px; bottom:120px; color:#fff; font-family:"Inter",sans-serif; font-weight:900; font-size:28px; }
+.phone .views { position:absolute; left:22px; bottom:70px; color:var(--yel); font-size:40px; }
+.phone .rail { position:absolute; right:18px; bottom:90px; display:flex; flex-direction:column; gap:22px; }
+.phone .dot { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.9); }
+.phone .play { position:absolute; left:50%; top:38%; width:0; height:0; border-top:50px solid transparent; border-bottom:50px solid transparent; border-left:80px solid rgba(255,255,255,.85); transform:translate(-35%,-50%); }
+.trophy { display:flex; flex-direction:column; align-items:center; }
+.trophy .cup { width:150px; height:120px; background:var(--yel); border-radius:0 0 75px 75px; border:8px solid var(--ink); }
+.trophy .stem { width:40px; height:40px; background:var(--yel); border-left:8px solid var(--ink); border-right:8px solid var(--ink); }
+.trophy .base { width:150px; height:34px; background:var(--yel); border:8px solid var(--ink); border-radius:8px; }
+
+.heart { position:relative; width:60px; height:54px; display:inline-block; }
+.heart::before, .heart::after { content:""; position:absolute; top:0; width:32px; height:52px; background:#fff; border-radius:32px 32px 0 0; }
+.heart::before { left:30px; transform:rotate(-45deg); transform-origin:0 100%; }
+.heart::after { left:-2px; transform:rotate(45deg); transform-origin:100% 100%; }
+
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="24.18" data-width="1080" data-height="1920">
+  <div id="stage" class="clip" data-start="0" data-duration="24.18" data-track-index="0" data-track-kind="graphics"></div>
+  <div id="part" class="clip partb" data-start="0" data-duration="24.18" data-track-index="1"><div class="parti">GTA · PARTE 1/3</div></div>
+  <div id="t0" class="clip title" data-start="0.00" data-duration="5.34" data-track-index="2"><div id="t0i" class="titlei">US$ <em>1 BI</em></div></div>
+<div id="i1" class="clip it" style="top:1160px" data-start="1.35" data-duration="3.99" data-track-index="4"><div id="i1i" class="tag" style="background:#2a9d8f;font-size:72px">EM 3 DIAS!</div></div>
+<div id="t1" class="clip title" data-start="5.34" data-duration="5.42" data-track-index="2"><div id="t1i" class="titlei"><em>RECORDE</em> MUNDIAL</div></div>
+<div id="i2" class="clip it" style="top:1160px" data-start="8.26" data-duration="2.50" data-track-index="4"><div id="i2i" class="tag" style="background:#d4a017;font-size:52px">🏆 O MAIS RÁPIDO DA HISTÓRIA</div></div>
+<div id="i3" class="clip it" style="top:1280px" data-start="5.94" data-duration="4.82" data-track-index="4"><div id="i3i" class="chip" style="">segundo o Guinness</div></div>
+<div id="t2" class="clip title" data-start="10.76" data-duration="3.31" data-track-index="2"><div id="t2i" class="titlei">MAIS QUE <em>FILMES</em></div></div>
+<div id="i4" class="clip it" style="top:1160px" data-start="12.04" data-duration="2.04" data-track-index="4"><div id="i4i" class="tag" style="background:#ff2e88;font-size:52px">🎬 📚 🎵 FICARAM PRA TRÁS</div></div>
+<div id="t3" class="clip title" data-start="14.07" data-duration="3.72" data-track-index="2"><div id="t3i" class="titlei">DE QUEM <em>ERA?</em></div></div>
+<div id="i5" class="clip it" style="top:1160px" data-start="16.70" data-duration="1.10" data-track-index="4"><div id="i5i" class="tag" style="background:#7b2ff7;font-size:62px">DE QUEM ERA? 🤔</div></div>
+<div id="t4" class="clip title" data-start="17.80" data-duration="3.36" data-track-index="2"><div id="t4i" class="titlei">QUE <em>JOGO?</em></div></div>
+<div id="i6" class="clip it" style="top:1160px" data-start="19.97" data-duration="1.19" data-track-index="4"><div id="i6i" class="tag" style="background:#7b2ff7;font-size:70px">NA PARTE 2 👀</div></div>
+<style>.cap{top:1420px !important}.vig{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(8,0,24,.55) 100%)}</style>
+<div id="vig" class="clip vig" data-start="0" data-duration="24.18" data-track-index="1"></div>
+<div id="t5" class="clip title" data-start="21.16" data-duration="3.02" data-track-index="2"><div id="t5i" class="titlei">PARTE <em>2</em> NO PERFIL!</div></div>
+<div id="i7" class="clip it" style="top:470px" data-start="21.21" data-duration="2.97" data-track-index="4"><div id="i7i" class="tag" style="background:#7b2ff7;font-size:84px">CONTINUA...</div></div>
+<div id="i8" class="clip it" style="top:700px" data-start="21.26" data-duration="2.92" data-track-index="4"><div id="i8i" class="tag" style="background:#3DF5FF;color:#12002b;font-size:110px;border-color:#12002b">+ SEGUIR</div></div>
+  <div id="cap0" class="clip cap" data-start="0.137" data-duration="0.613" data-track-index="3"><div id="capi0" class="capi"><span id="w0_0" class="cw">UM</span> <span id="w0_1" class="cw">BILHÃO</span> <span id="w0_2" class="cw">DE</span></div></div>
+<div id="cap1" class="clip cap" data-start="0.750" data-duration="0.955" data-track-index="3"><div id="capi1" class="capi"><span id="w1_0" class="cw">DÓLARES</span> <span id="w1_1" class="cw">EM</span> <span id="w1_2" class="cw">TRÊS</span></div></div>
+<div id="cap2" class="clip cap" data-start="1.705" data-duration="1.363" data-track-index="3"><div id="capi2" class="capi"><span id="w2_0" class="cw">DIAS</span> <span id="w2_1" class="cw">O</span> <span id="w2_2" class="cw">GTA</span></div></div>
+<div id="cap3" class="clip cap" data-start="3.068" data-duration="1.035" data-track-index="3"><div id="capi3" class="capi"><span id="w3_0" class="cw">5 FEZ</span> <span id="w3_1" class="cw">ISSO</span> <span id="w3_2" class="cw">EM</span></div></div>
+<div id="cap4" class="clip cap" data-start="4.103" data-duration="0.454" data-track-index="3"><div id="capi4" class="capi"><span id="w4_0" class="cw">DOIS</span> <span id="w4_1" class="cw">MIL</span> <span id="w4_2" class="cw">E</span></div></div>
+<div id="cap5" class="clip cap" data-start="4.557" data-duration="0.874" data-track-index="3"><div id="capi5" class="capi"><span id="w5_0" class="cw">TREZE</span></div></div>
+<div id="cap6" class="clip cap" data-start="5.431" data-duration="1.084" data-track-index="3"><div id="capi6" class="capi"><span id="w6_0" class="cw">SEGUNDO</span> <span id="w6_1" class="cw">O</span> <span id="w6_2" class="cw">GUINNESS</span></div></div>
+<div id="cap7" class="clip cap" data-start="6.515" data-duration="0.637" data-track-index="3"><div id="capi7" class="capi"><span id="w7_0" class="cw">FOI</span> <span id="w7_1" class="cw">O</span> <span id="w7_2" class="cw">PRODUTO</span></div></div>
+<div id="cap8" class="clip cap" data-start="7.152" data-duration="1.097" data-track-index="3"><div id="capi8" class="capi"><span id="w8_0" class="cw">DE</span> <span id="w8_1" class="cw">ENTRETENIMENTO</span> <span id="w8_2" class="cw">MAIS</span></div></div>
+<div id="cap9" class="clip cap" data-start="8.249" data-duration="0.979" data-track-index="3"><div id="capi9" class="capi"><span id="w9_0" class="cw">RÁPIDO</span> <span id="w9_1" class="cw">DA</span> <span id="w9_2" class="cw">HISTÓRIA</span></div></div>
+<div id="cap10" class="clip cap" data-start="9.228" data-duration="0.424" data-track-index="3"><div id="capi10" class="capi"><span id="w10_0" class="cw">A</span> <span id="w10_1" class="cw">CHEGAR</span> <span id="w10_2" class="cw">A</span></div></div>
+<div id="cap11" class="clip cap" data-start="9.652" data-duration="1.138" data-track-index="3"><div id="capi11" class="capi"><span id="w11_0" class="cw">UM</span> <span id="w11_1" class="cw">BILHÃO</span></div></div>
+<div id="cap12" class="clip cap" data-start="10.846" data-duration="0.792" data-track-index="3"><div id="capi12" class="capi"><span id="w12_0" class="cw">MAIS</span> <span id="w12_1" class="cw">RÁPIDO</span> <span id="w12_2" class="cw">QUE</span></div></div>
+<div id="cap13" class="clip cap" data-start="11.638" data-duration="1.440" data-track-index="3"><div id="capi13" class="capi"><span id="w13_0" class="cw">QUALQUER</span> <span id="w13_1" class="cw">FILME</span> <span id="w13_2" class="cw">LIVRO</span></div></div>
+<div id="cap14" class="clip cap" data-start="13.078" data-duration="1.085" data-track-index="3"><div id="capi14" class="capi"><span id="w14_0" class="cw">OU</span> <span id="w14_1" class="cw">MÚSICA</span></div></div>
+<div id="cap15" class="clip cap" data-start="14.163" data-duration="0.601" data-track-index="3"><div id="capi15" class="capi"><span id="w15_0" class="cw">E</span> <span id="w15_1" class="cw">ELE</span> <span id="w15_2" class="cw">TIROU</span></div></div>
+<div id="cap16" class="clip cap" data-start="14.764" data-duration="0.913" data-track-index="3"><div id="capi16" class="capi"><span id="w16_0" class="cw">ESSE</span> <span id="w16_1" class="cw">RECORDE</span> <span id="w16_2" class="cw">DE</span></div></div>
+<div id="cap17" class="clip cap" data-start="15.677" data-duration="1.010" data-track-index="3"><div id="capi17" class="capi"><span id="w17_0" class="cw">OUTRO</span> <span id="w17_1" class="cw">JOGO</span> <span id="w17_2" class="cw">MUITO</span></div></div>
+<div id="cap18" class="clip cap" data-start="16.687" data-duration="1.089" data-track-index="3"><div id="capi18" class="capi"><span id="w18_0" class="cw">FAMOSO</span></div></div>
+<div id="cap19" class="clip cap" data-start="17.882" data-duration="0.653" data-track-index="3"><div id="capi19" class="capi"><span id="w19_0" class="cw">QUE</span> <span id="w19_1" class="cw">JOGO</span> <span id="w19_2" class="cw">ERA</span></div></div>
+<div id="cap20" class="clip cap" data-start="18.535" data-duration="0.919" data-track-index="3"><div id="capi20" class="capi"><span id="w20_0" class="cw">ESSE</span> <span id="w20_1" class="cw">EU</span> <span id="w20_2" class="cw">TE</span></div></div>
+<div id="cap21" class="clip cap" data-start="19.454" data-duration="0.814" data-track-index="3"><div id="capi21" class="capi"><span id="w21_0" class="cw">CONTO</span> <span id="w21_1" class="cw">NA</span> <span id="w21_2" class="cw">PARTE</span></div></div>
+<div id="cap22" class="clip cap" data-start="20.268" data-duration="0.973" data-track-index="3"><div id="capi22" class="capi"><span id="w22_0" class="cw">DOIS</span></div></div>
+<div id="cap23" class="clip cap" data-start="21.248" data-duration="0.747" data-track-index="3"><div id="capi23" class="capi"><span id="w23_0" class="cw">SEGUE</span> <span id="w23_1" class="cw">AÍ</span> <span id="w23_2" class="cw">PRA</span></div></div>
+<div id="cap24" class="clip cap" data-start="21.995" data-duration="0.573" data-track-index="3"><div id="capi24" class="capi"><span id="w24_0" class="cw">NÃO</span> <span id="w24_1" class="cw">PERDER</span> <span id="w24_2" class="cw">A</span></div></div>
+<div id="cap25" class="clip cap" data-start="22.568" data-duration="1.296" data-track-index="3"><div id="capi25" class="capi"><span id="w25_0" class="cw">PARTE</span> <span id="w25_1" class="cw">DOIS</span></div></div>
+  <audio id="mix" src="assets/audio/mix.wav" data-start="0" data-duration="24.18" data-track-index="9"></audio>
+</div>
+<script>window.__cfg = {"storm": [], "lightning": [], "animals": false, "rise": null, "flash": null, "tv": [[0, "txt|GTA 5 \u00b7 2013|US$ 1 BI|EM 3 DIAS"], [5.343, "record"], [10.76, "record"], [14.074, "record"], [17.796, "txt|O RECORDE ERA DE|???|"]], "poses": [[0, "shock"], [5.343, "cheer"], [10.76, "shock"], [14.074, "think"], [17.796, "point"], [21.160999999999998, "point"]], "cams": [["tv", 0, 5.343], ["tv", 5.343, 10.76], ["front", 10.76, 14.074], ["close", 14.074, 17.796], ["front", 17.796, 21.160999999999998], ["pull", 21.160999999999998, 24.18]], "px": 0.75, "shots": [], "total": 24.18};</script>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#i1i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},1.35);
+tl.fromTo("#t1i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},5.34);
+tl.fromTo("#i2i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},8.26);
+tl.fromTo("#i3i",{y:40,opacity:0},{y:0,opacity:1,duration:0.2,ease:'back.out(2)'},5.94);
+tl.fromTo("#t2i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},10.76);
+tl.fromTo("#i4i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},12.04);
+tl.fromTo("#t3i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},14.07);
+tl.fromTo("#i5i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},16.70);
+tl.fromTo("#t4i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},17.80);
+tl.fromTo("#i6i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},19.97);
+tl.fromTo("#t5i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},21.16);
+tl.fromTo("#i7i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},21.21);
+tl.fromTo("#i8i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},21.26);
+tl.to("#i8i",{scale:1.1,duration:0.18,yoyo:true,repeat:5,ease:"sine.inOut"},21.61);
+tl.set("#w0_0",{color:"#FFD84D",scale:1.08},0.177);
+tl.set("#w0_0",{color:"#FFFFFF",scale:1},0.376);
+tl.set("#w0_1",{color:"#FFD84D",scale:1.08},0.336);
+tl.set("#w0_1",{color:"#FFFFFF",scale:1},0.728);
+tl.set("#w0_2",{color:"#FFD84D",scale:1.08},0.688);
+tl.set("#w0_2",{color:"#FFFFFF",scale:1},0.830);
+tl.fromTo("#capi0",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},0.137);
+tl.set("#w1_0",{color:"#FFD84D",scale:1.08},0.790);
+tl.set("#w1_0",{color:"#FFFFFF",scale:1},1.228);
+tl.set("#w1_1",{color:"#FFD84D",scale:1.08},1.188);
+tl.set("#w1_1",{color:"#FFFFFF",scale:1},1.421);
+tl.set("#w1_2",{color:"#FFD84D",scale:1.08},1.381);
+tl.set("#w1_2",{color:"#FFFFFF",scale:1},1.785);
+tl.fromTo("#capi1",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},0.750);
+tl.set("#w2_0",{color:"#FFD84D",scale:1.08},1.745);
+tl.set("#w2_0",{color:"#FFFFFF",scale:1},2.262);
+tl.set("#w2_1",{color:"#FFD84D",scale:1.08},2.529);
+tl.set("#w2_1",{color:"#FFFFFF",scale:1},2.637);
+tl.set("#w2_2",{color:"#FFD84D",scale:1.08},2.597);
+tl.set("#w2_2",{color:"#FFFFFF",scale:1},3.148);
+tl.fromTo("#capi2",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},1.705);
+tl.set("#w3_0",{color:"#FFD84D",scale:1.08},3.108);
+tl.set("#w3_0",{color:"#FFFFFF",scale:1},3.842);
+tl.set("#w3_1",{color:"#FFD84D",scale:1.08},3.802);
+tl.set("#w3_1",{color:"#FFFFFF",scale:1},4.137);
+tl.set("#w3_2",{color:"#FFD84D",scale:1.08},4.097);
+tl.set("#w3_2",{color:"#FFFFFF",scale:1},4.182);
+tl.fromTo("#capi3",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},3.068);
+tl.set("#w4_0",{color:"#FFD84D",scale:1.08},4.143);
+tl.set("#w4_0",{color:"#FFFFFF",scale:1},4.387);
+tl.set("#w4_1",{color:"#FFD84D",scale:1.08},4.347);
+tl.set("#w4_1",{color:"#FFFFFF",scale:1},4.569);
+tl.set("#w4_2",{color:"#FFD84D",scale:1.08},4.529);
+tl.set("#w4_2",{color:"#FFFFFF",scale:1},4.637);
+tl.fromTo("#capi4",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},4.103);
+tl.set("#w5_0",{color:"#FFD84D",scale:1.08},4.597);
+tl.set("#w5_0",{color:"#FFFFFF",scale:1},5.023);
+tl.fromTo("#capi5",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},4.557);
+tl.set("#w6_0",{color:"#FFD84D",scale:1.08},5.471);
+tl.set("#w6_0",{color:"#FFFFFF",scale:1},5.982);
+tl.set("#w6_1",{color:"#FFD84D",scale:1.08},5.942);
+tl.set("#w6_1",{color:"#FFFFFF",scale:1},6.006);
+tl.set("#w6_2",{color:"#FFD84D",scale:1.08},5.966);
+tl.set("#w6_2",{color:"#FFFFFF",scale:1},6.407);
+tl.fromTo("#capi6",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},5.431);
+tl.set("#w7_0",{color:"#FFD84D",scale:1.08},6.555);
+tl.set("#w7_0",{color:"#FFFFFF",scale:1},6.713);
+tl.set("#w7_1",{color:"#FFD84D",scale:1.08},6.673);
+tl.set("#w7_1",{color:"#FFFFFF",scale:1},6.761);
+tl.set("#w7_2",{color:"#FFD84D",scale:1.08},6.721);
+tl.set("#w7_2",{color:"#FFFFFF",scale:1},7.232);
+tl.fromTo("#capi7",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},6.515);
+tl.set("#w8_0",{color:"#FFD84D",scale:1.08},7.192);
+tl.set("#w8_0",{color:"#FFFFFF",scale:1},7.303);
+tl.set("#w8_1",{color:"#FFD84D",scale:1.08},7.263);
+tl.set("#w8_1",{color:"#FFFFFF",scale:1},8.011);
+tl.set("#w8_2",{color:"#FFD84D",scale:1.08},7.971);
+tl.set("#w8_2",{color:"#FFFFFF",scale:1},8.329);
+tl.fromTo("#capi8",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},7.152);
+tl.set("#w9_0",{color:"#FFD84D",scale:1.08},8.289);
+tl.set("#w9_0",{color:"#FFFFFF",scale:1},8.801);
+tl.set("#w9_1",{color:"#FFD84D",scale:1.08},8.761);
+tl.set("#w9_1",{color:"#FFFFFF",scale:1},8.919);
+tl.set("#w9_2",{color:"#FFD84D",scale:1.08},8.879);
+tl.set("#w9_2",{color:"#FFFFFF",scale:1},9.308);
+tl.fromTo("#capi9",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},8.249);
+tl.set("#w10_0",{color:"#FFD84D",scale:1.08},9.268);
+tl.set("#w10_0",{color:"#FFFFFF",scale:1},9.320);
+tl.set("#w10_1",{color:"#FFD84D",scale:1.08},9.280);
+tl.set("#w10_1",{color:"#FFFFFF",scale:1},9.673);
+tl.set("#w10_2",{color:"#FFD84D",scale:1.08},9.633);
+tl.set("#w10_2",{color:"#FFFFFF",scale:1},9.732);
+tl.fromTo("#capi10",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},9.228);
+tl.set("#w11_0",{color:"#FFD84D",scale:1.08},9.692);
+tl.set("#w11_0",{color:"#FFFFFF",scale:1},9.874);
+tl.set("#w11_1",{color:"#FFD84D",scale:1.08},9.834);
+tl.set("#w11_1",{color:"#FFFFFF",scale:1},10.310);
+tl.fromTo("#capi11",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},9.652);
+tl.set("#w12_0",{color:"#FFD84D",scale:1.08},10.886);
+tl.set("#w12_0",{color:"#FFFFFF",scale:1},11.160);
+tl.set("#w12_1",{color:"#FFD84D",scale:1.08},11.120);
+tl.set("#w12_1",{color:"#FFFFFF",scale:1},11.607);
+tl.set("#w12_2",{color:"#FFD84D",scale:1.08},11.567);
+tl.set("#w12_2",{color:"#FFFFFF",scale:1},11.718);
+tl.fromTo("#capi12",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},10.846);
+tl.set("#w13_0",{color:"#FFD84D",scale:1.08},11.678);
+tl.set("#w13_0",{color:"#FFFFFF",scale:1},12.109);
+tl.set("#w13_1",{color:"#FFD84D",scale:1.08},12.069);
+tl.set("#w13_1",{color:"#FFFFFF",scale:1},12.500);
+tl.set("#w13_2",{color:"#FFD84D",scale:1.08},12.638);
+tl.set("#w13_2",{color:"#FFFFFF",scale:1},13.158);
+tl.fromTo("#capi13",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},11.638);
+tl.set("#w14_0",{color:"#FFD84D",scale:1.08},13.118);
+tl.set("#w14_0",{color:"#FFFFFF",scale:1},13.314);
+tl.set("#w14_1",{color:"#FFD84D",scale:1.08},13.274);
+tl.set("#w14_1",{color:"#FFFFFF",scale:1},13.794);
+tl.fromTo("#capi14",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},13.078);
+tl.set("#w15_0",{color:"#FFD84D",scale:1.08},14.203);
+tl.set("#w15_0",{color:"#FFFFFF",scale:1},14.351);
+tl.set("#w15_1",{color:"#FFD84D",scale:1.08},14.311);
+tl.set("#w15_1",{color:"#FFFFFF",scale:1},14.555);
+tl.set("#w15_2",{color:"#FFD84D",scale:1.08},14.515);
+tl.set("#w15_2",{color:"#FFFFFF",scale:1},14.844);
+tl.fromTo("#capi15",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},14.163);
+tl.set("#w16_0",{color:"#FFD84D",scale:1.08},14.804);
+tl.set("#w16_0",{color:"#FFFFFF",scale:1},15.012);
+tl.set("#w16_1",{color:"#FFD84D",scale:1.08},14.972);
+tl.set("#w16_1",{color:"#FFFFFF",scale:1},15.577);
+tl.set("#w16_2",{color:"#FFD84D",scale:1.08},15.537);
+tl.set("#w16_2",{color:"#FFFFFF",scale:1},15.757);
+tl.fromTo("#capi16",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},14.764);
+tl.set("#w17_0",{color:"#FFD84D",scale:1.08},15.717);
+tl.set("#w17_0",{color:"#FFFFFF",scale:1},16.034);
+tl.set("#w17_1",{color:"#FFD84D",scale:1.08},15.994);
+tl.set("#w17_1",{color:"#FFFFFF",scale:1},16.358);
+tl.set("#w17_2",{color:"#FFD84D",scale:1.08},16.318);
+tl.set("#w17_2",{color:"#FFFFFF",scale:1},16.767);
+tl.fromTo("#capi17",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},15.677);
+tl.set("#w18_0",{color:"#FFD84D",scale:1.08},16.727);
+tl.set("#w18_0",{color:"#FFFFFF",scale:1},17.296);
+tl.fromTo("#capi18",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},16.687);
+tl.set("#w19_0",{color:"#FFD84D",scale:1.08},17.922);
+tl.set("#w19_0",{color:"#FFFFFF",scale:1},18.053);
+tl.set("#w19_1",{color:"#FFD84D",scale:1.08},18.013);
+tl.set("#w19_1",{color:"#FFFFFF",scale:1},18.432);
+tl.set("#w19_2",{color:"#FFD84D",scale:1.08},18.392);
+tl.set("#w19_2",{color:"#FFFFFF",scale:1},18.615);
+tl.fromTo("#capi19",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},17.882);
+tl.set("#w20_0",{color:"#FFD84D",scale:1.08},18.575);
+tl.set("#w20_0",{color:"#FFFFFF",scale:1},18.959);
+tl.set("#w20_1",{color:"#FFD84D",scale:1.08},19.230);
+tl.set("#w20_1",{color:"#FFFFFF",scale:1},19.385);
+tl.set("#w20_2",{color:"#FFD84D",scale:1.08},19.345);
+tl.set("#w20_2",{color:"#FFFFFF",scale:1},19.534);
+tl.fromTo("#capi20",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},18.535);
+tl.set("#w21_0",{color:"#FFD84D",scale:1.08},19.494);
+tl.set("#w21_0",{color:"#FFFFFF",scale:1},19.912);
+tl.set("#w21_1",{color:"#FFD84D",scale:1.08},19.872);
+tl.set("#w21_1",{color:"#FFFFFF",scale:1},20.038);
+tl.set("#w21_2",{color:"#FFD84D",scale:1.08},19.998);
+tl.set("#w21_2",{color:"#FFFFFF",scale:1},20.348);
+tl.fromTo("#capi21",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},19.454);
+tl.set("#w22_0",{color:"#FFD84D",scale:1.08},20.308);
+tl.set("#w22_0",{color:"#FFFFFF",scale:1},20.761);
+tl.fromTo("#capi22",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},20.268);
+tl.set("#w23_0",{color:"#FFD84D",scale:1.08},21.288);
+tl.set("#w23_0",{color:"#FFFFFF",scale:1},21.701);
+tl.set("#w23_1",{color:"#FFD84D",scale:1.08},21.661);
+tl.set("#w23_1",{color:"#FFFFFF",scale:1},21.935);
+tl.set("#w23_2",{color:"#FFD84D",scale:1.08},21.895);
+tl.set("#w23_2",{color:"#FFFFFF",scale:1},22.075);
+tl.fromTo("#capi23",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},21.248);
+tl.set("#w24_0",{color:"#FFD84D",scale:1.08},22.035);
+tl.set("#w24_0",{color:"#FFFFFF",scale:1},22.227);
+tl.set("#w24_1",{color:"#FFD84D",scale:1.08},22.187);
+tl.set("#w24_1",{color:"#FFFFFF",scale:1},22.589);
+tl.set("#w24_2",{color:"#FFD84D",scale:1.08},22.549);
+tl.set("#w24_2",{color:"#FFFFFF",scale:1},22.648);
+tl.fromTo("#capi24",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},21.995);
+tl.set("#w25_0",{color:"#FFD84D",scale:1.08},22.608);
+tl.set("#w25_0",{color:"#FFFFFF",scale:1},22.951);
+tl.set("#w25_1",{color:"#FFD84D",scale:1.08},22.911);
+tl.set("#w25_1",{color:"#FFFFFF",scale:1},23.384);
+tl.fromTo("#capi25",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},22.568);
+window.__timelines["main"] = tl;
+tl.seek(0);
+</script>
+<script type="module" src="assets/scene.js"></script>
+</body>
+</html>

@@ -329,6 +329,66 @@ function centerText(g, txt, x, y, size, fill, stroke) { g.font = `900 ${size}px 
 function drawTVNews(t) {
   const g = tvCtx, w = 640, h = 360;
   const [[t0, mode]] = at0(TVM, t); const tt = t - t0;
+  if (mode.startsWith("txt|")) { // generic card: "txt|small label|BIG|sub"
+    const [, a, b, c] = mode.split("|");
+    const gr = g.createRadialGradient(w / 2, h / 2, 10, w / 2, h / 2, 380); gr.addColorStop(0, "#2b0b4f"); gr.addColorStop(1, "#06010f"); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    const s = 1 + Math.max(0, 0.2 - tt) * 1.5;
+    if (a) centerText(g, a, w / 2, 70, 30, "#3df5ff");
+    if (b) { // fit the big line inside the visible screen (edges are cropped by the TV frame)
+      let size = 110; g.font = `900 ${size}px Arial Black, Arial`; const wd = g.measureText(b).width;
+      size *= Math.min(1, (w - 140) / wd);
+      centerText(g, b, w / 2, 175, size * s, "#ffffff", "#12002b");
+    }
+    if (c) centerText(g, c, w / 2, 285, 36, "#ffd84d", "#12002b");
+    return "#9a7bff";
+  }
+  if (mode === "topdown") { // 1997-style top-down chase
+    g.fillStyle = "#2f6b2f"; g.fillRect(0, 0, w, h);
+    g.fillStyle = "#555"; g.fillRect(250, 0, 140, h); g.fillRect(0, 130, w, 100);
+    g.fillStyle = "#ddd"; for (let y = -40; y < h; y += 40) g.fillRect(318, ((y + tt * 160) % (h + 40)), 4, 20);
+    g.fillStyle = "#8a6a4a"; [[40, 20], [460, 20], [40, 260], [460, 260]].forEach(([x, y]) => g.fillRect(x, y, 150, 90));
+    const cy = h - 60 - ((tt * 120) % (h + 60)) + 60;
+    g.fillStyle = "#ffd84d"; g.fillRect(290, cy, 26, 44);
+    g.fillStyle = "#fff"; g.fillRect(332, cy + 70, 26, 44); g.fillStyle = Math.floor(tt * 8) % 2 ? "#e63946" : "#3d6bff"; g.fillRect(336, cy + 74, 18, 8);
+    centerText(g, "1997", 560, 330, 30, "#ffffff", "#12002b");
+    return "#5aa05a";
+  }
+  if (mode === "cops") { // aggressive police cars ramming the player
+    g.fillStyle = "#1b1b2b"; g.fillRect(0, 0, w, h); g.fillStyle = "#2a2a3a"; g.fillRect(0, h * 0.45, w, h * 0.55);
+    g.fillStyle = "#ffd84d"; for (let x = -60; x < w; x += 90) g.fillRect(((x - tt * 300) % (w + 90) + w + 90) % (w + 90) - 60, h * 0.72, 50, 6);
+    const shake = Math.sin(tt * 40) * (Math.floor(tt * 1.5) % 2 ? 6 : 0);
+    g.fillStyle = "#e63946"; g.fillRect(260 + shake, 210, 130, 50); g.fillStyle = "#12002b"; g.fillRect(280 + shake, 186, 90, 28);
+    [[90, 200], [440, 222]].forEach(([x, y], i) => {
+      const dx = Math.sin(tt * 3 + i) * 20; g.fillStyle = "#f4f4f4"; g.fillRect(x + dx, y, 120, 46); g.fillStyle = "#12002b"; g.fillRect(x + 18 + dx, y - 24, 84, 26);
+      g.fillStyle = (Math.floor(tt * 8) + i) % 2 ? "#e63946" : "#3d6bff"; g.fillRect(x + 40 + dx, y - 34, 40, 10);
+    });
+    if (Math.floor(tt * 1.5) % 2) centerText(g, "BUM!", 250, 150, 44, "#ffd84d", "#12002b");
+    centerText(g, "POLÍCIA", w / 2, 40, 30, "#ffffff", "#12002b");
+    return "#5070ff";
+  }
+  if (mode === "mural") { // cave-painting mural: UFO, egg, jetpack man, boxes
+    g.fillStyle = "#c9a878"; g.fillRect(0, 0, w, h);
+    const r9 = rng(4); g.fillStyle = "rgba(90,60,30,.18)"; for (let i = 0; i < 90; i++) g.fillRect(r9() * w, r9() * h, 6 + r9() * 20, 3);
+    g.strokeStyle = "#3a2410"; g.fillStyle = "#3a2410"; g.lineWidth = 6;
+    g.beginPath(); g.ellipse(150, 120, 70, 18, 0, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.ellipse(150, 104, 30, 18, 0, Math.PI, 0); g.stroke();
+    g.beginPath(); g.ellipse(320, 120, 32, 44, 0, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(490, 80, 14, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.moveTo(490, 94); g.lineTo(490, 150); g.moveTo(470, 110); g.lineTo(510, 110); g.moveTo(490, 150); g.lineTo(475, 180); g.moveTo(490, 150); g.lineTo(505, 180); g.stroke();
+    g.fillRect(470, 100, 12, 34); g.fillStyle = "#e66a1a"; g.beginPath(); g.moveTo(470, 134); g.lineTo(482, 134); g.lineTo(476, 150 + Math.sin(tt * 20) * 6); g.fill();
+    g.strokeStyle = "#3a2410"; g.lineWidth = 4;
+    for (let i = 0; i < 6; i++) { const x = 90 + i * 80, y = 240 + (i % 2) * 30; g.strokeRect(x, y, 50, 40); if (i % 2 === 0) { g.beginPath(); g.moveTo(x + 8, y + 8); g.lineTo(x + 42, y + 32); g.moveTo(x + 42, y + 8); g.lineTo(x + 8, y + 32); g.stroke(); } if (i < 5) { g.beginPath(); g.moveTo(x + 50, y + 20); g.lineTo(x + 80, 240 + ((i + 1) % 2) * 30 + 20); g.stroke(); } }
+    const glow = 0.15 + 0.15 * Math.sin(tt * 3); g.fillStyle = `rgba(255,216,77,${glow})`; g.fillRect(0, 0, w, h);
+    return "#d9a860";
+  }
+  if (mode === "record") { // world record medal
+    g.fillStyle = "#0b0720"; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2 + tt * 0.6; g.fillStyle = "rgba(255,216,77,.08)"; g.beginPath(); g.moveTo(w / 2, 170); g.arc(w / 2, 170, 400, a, a + 0.12); g.fill(); }
+    g.fillStyle = "#e63946"; g.beginPath(); g.moveTo(w / 2 - 50, 40); g.lineTo(w / 2 - 10, 120); g.lineTo(w / 2 - 50, 120); g.fill(); g.beginPath(); g.moveTo(w / 2 + 50, 40); g.lineTo(w / 2 + 10, 120); g.lineTo(w / 2 + 50, 120); g.fill();
+    const s = 1 + Math.max(0, 0.3 - tt) * 2;
+    g.fillStyle = "#ffd84d"; g.beginPath(); g.arc(w / 2, 175, 75 * s, 0, Math.PI * 2); g.fill(); g.fillStyle = "#d4a017"; g.beginPath(); g.arc(w / 2, 175, 58 * s, 0, Math.PI * 2); g.fill();
+    centerText(g, "★", w / 2, 178, 70 * s, "#fff6c9");
+    centerText(g, "RECORDE MUNDIAL", w / 2, 300, 36, "#ffffff", "#12002b");
+    return "#ffd84d";
+  }
   if (mode === "score") {
     const gr = g.createRadialGradient(w / 2, h / 2, 10, w / 2, h / 2, 380); gr.addColorStop(0, "#2b0b4f"); gr.addColorStop(1, "#06010f"); g.fillStyle = gr; g.fillRect(0, 0, w, h);
     const n = Math.min(99, Math.round(99 * easeOutC(clamp(tt / 1.2))));
