@@ -392,6 +392,106 @@ function drawTVNews(t) {
     centerText(g, "Notas da atualização: ???", w / 2, 260, 26, "#9aa7d9");
     return "#203060";
   }
+  if (mode === "money") { // day-one revenue counter
+    const gr = g.createRadialGradient(w / 2, h / 2, 10, w / 2, h / 2, 380); gr.addColorStop(0, "#0d3b22"); gr.addColorStop(1, "#03100a"); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    const r6 = rng(5); g.fillStyle = "#2ecc71";
+    for (let i = 0; i < 26; i++) { const x = r6() * w, y = ((r6() * h + tt * (60 + r6() * 80)) % (h + 40)) - 20; g.globalAlpha = 0.35; g.fillRect(x, y, 34, 16); }
+    g.globalAlpha = 1;
+    const v = (3.79 * easeOutC(clamp(tt / 0.7))).toFixed(2).replace(".", ",");
+    centerText(g, "VENDAS NO 1º DIA", w / 2, 60, 30, "#3df5ff");
+    centerText(g, "US$ " + v, w / 2, 170, 104, "#ffffff", "#0b2a18");
+    centerText(g, "BILHÕES", w / 2, 270, 52, "#ffd84d", "#0b2a18");
+    return "#3dff8a";
+  }
+  if (mode === "compare") { // GTA 5 vs GTA 6 day one bars
+    g.fillStyle = "#0b0720"; g.fillRect(0, 0, w, h);
+    const k = easeOutC(clamp(tt / 1.4)), base = 300, full = 210;
+    g.fillStyle = "#6c7bd9"; const h5 = full * 0.8 / 3.79 * k; g.fillRect(150, base - h5, 120, h5);
+    g.fillStyle = "#2ecc71"; const h6 = full * k; g.fillRect(370, base - h6, 120, h6);
+    centerText(g, "GTA 5", 210, 330, 28, "#ffffff"); centerText(g, "GTA 6", 430, 330, 28, "#ffffff");
+    centerText(g, "US$ 0,8 BI", 210, base - h5 - 22, 26, "#c9d0ff"); centerText(g, "US$ 3,79 BI", 430, base - h6 - 22, 26, "#ffd84d");
+    centerText(g, "1º DIA", w / 2, 36, 28, "#3df5ff");
+    return "#5aa0ff";
+  }
+  if (mode === "copies") { // copies sold: still a secret
+    g.fillStyle = "#120a24"; g.fillRect(0, 0, w, h);
+    centerText(g, "CÓPIAS VENDIDAS", w / 2, 70, 34, "#3df5ff");
+    const r7 = rng(Math.floor(tt * 10) + 9); let s = ""; for (let i = 0; i < 9; i++) s += Math.floor(r7() * 10);
+    centerText(g, s.replace(/(\d{3})(?=\d)/g, "$1."), w / 2, 175, 84, "rgba(255,255,255,.25)");
+    g.fillStyle = "#e63946"; g.save(); g.translate(w / 2, 180); g.rotate(-0.12); g.fillRect(-230, -42, 460, 84); g.restore();
+    centerText(g, "SEGREDO", w / 2, 178, 64, "#ffffff");
+    centerText(g, "a Take-Two não divulgou", w / 2, 300, 26, "#9aa7d9");
+    return "#a050ff";
+  }
+  if (mode === "egg") { // radio tower with a nest of painted eggs
+    const sky = g.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, "#14002e"); sky.addColorStop(1, "#ff7a59"); g.fillStyle = sky; g.fillRect(0, 0, w, h);
+    const climb = clamp(tt / 3.5);
+    g.save(); g.translate(0, -60 + climb * 60);
+    g.strokeStyle = "#e63946"; g.lineWidth = 5;
+    g.beginPath(); g.moveTo(w / 2 - 70, h + 80); g.lineTo(w / 2 - 12, 90); g.moveTo(w / 2 + 70, h + 80); g.lineTo(w / 2 + 12, 90); g.stroke();
+    g.lineWidth = 3; for (let y = 110; y < h + 80; y += 34) { const k2 = (y - 90) / (h - 10); g.beginPath(); g.moveTo(w / 2 - 12 - 58 * k2, y); g.lineTo(w / 2 + 12 + 58 * k2 + 6, y + 34); g.stroke(); }
+    g.fillStyle = "#8a5a2b"; g.beginPath(); g.ellipse(w / 2, 88, 44, 14, 0, 0, Math.PI * 2); g.fill();
+    const cols = ["#ff2e88", "#3df5ff", "#ffd84d", "#7bff6a", "#b98cff"];
+    cols.forEach((c, i) => { g.fillStyle = c; g.beginPath(); g.ellipse(w / 2 - 30 + i * 15, 76 - (i % 2) * 6, 9, 12, 0, 0, Math.PI * 2); g.fill(); });
+    const py = h + 40 - climb * (h - 90); g.fillStyle = "#1fb5a8"; g.fillRect(w / 2 - 6, py - 26, 12, 22); g.fillStyle = "#e0a07a"; g.beginPath(); g.arc(w / 2, py - 32, 7, 0, Math.PI * 2); g.fill();
+    g.restore();
+    g.fillStyle = "rgba(0,0,0,.6)"; g.fillRect(16, 14, 170, 46);
+    centerText(g, "⏱ " + Math.min(7, Math.floor(clamp(tt / 3.5) * 7)) + ":00", 101, 38, 28, "#ffd84d");
+    return "#ff8a6a";
+  }
+  if (mode === "dog") { // dog on a jet ski with goggles and life jacket
+    const sky = g.createLinearGradient(0, 0, 0, h * 0.5); sky.addColorStop(0, "#3d8bff"); sky.addColorStop(1, "#bfe6ff"); g.fillStyle = sky; g.fillRect(0, 0, w, h * 0.5);
+    g.fillStyle = "#1565c0"; g.fillRect(0, h * 0.5, w, h * 0.5);
+    g.strokeStyle = "rgba(255,255,255,.5)"; g.lineWidth = 3; for (let i = 0; i < 8; i++) { const y = h * 0.55 + i * 22, o = (tt * 90 + i * 40) % 80; g.beginPath(); for (let x = -80 + o; x < w; x += 80) { g.moveTo(x, y); g.quadraticCurveTo(x + 20, y - 8, x + 40, y); } g.stroke(); }
+    const x = 120 + ((tt * 70) % 520) * 0.6, bob = Math.sin(tt * 6) * 5, y = h * 0.62 + bob;
+    g.fillStyle = "#ffffff"; g.beginPath(); g.moveTo(x - 90, y); g.lineTo(x + 80, y); g.lineTo(x + 110, y - 22); g.lineTo(x - 70, y - 26); g.fill();
+    g.fillStyle = "#ffd84d"; g.fillRect(x - 70, y - 40, 120, 16);
+    g.fillStyle = "#c98a4b"; g.fillRect(x - 30, y - 92, 46, 54); g.fillStyle = "#ff7a00"; g.fillRect(x - 34, y - 80, 54, 30);
+    g.fillStyle = "#c98a4b"; g.beginPath(); g.arc(x + 20, y - 108, 26, 0, Math.PI * 2); g.fill(); g.fillRect(x + 28, y - 104, 30, 16);
+    g.fillStyle = "#6b4423"; g.beginPath(); g.ellipse(x + 4, y - 122, 9, 18, -0.5, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#12002b"; g.fillRect(x + 6, y - 120, 40, 12); g.fillStyle = "#3df5ff"; g.fillRect(x + 10, y - 118, 14, 8); g.fillRect(x + 28, y - 118, 14, 8);
+    g.fillStyle = "#111"; g.beginPath(); g.arc(x + 58, y - 98, 6, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "#fff"; g.lineWidth = 4; g.beginPath(); for (let i = 0; i < 4; i++) { g.moveTo(x - 92 - i * 18, y - 6 + Math.sin(tt * 9 + i) * 4); g.lineTo(x - 104 - i * 18, y - 14); } g.stroke();
+    centerText(g, "RESGATE! 🐶", 150, 40, 30, "#ffffff", "#12002b");
+    return "#5ab0ff";
+  }
+  if (mode === "skunk") { // swamp creature silhouette with smell lines
+    g.fillStyle = "#06140c"; g.fillRect(0, 0, w, h);
+    g.fillStyle = "#0e2a18"; for (let i = 0; i < 9; i++) { g.fillRect(i * 74 + 10, 40, 14, h); g.beginPath(); g.arc(i * 74 + 17, 50, 40, 0, Math.PI * 2); g.fill(); }
+    g.fillStyle = "#0a3a2a"; g.fillRect(0, h * 0.78, w, h * 0.22);
+    const x = 200 + clamp(tt / 4) * 240, step = Math.sin(tt * 5) * 6;
+    g.fillStyle = "#1c1208"; g.beginPath(); g.ellipse(x, 190, 42, 62, 0, 0, Math.PI * 2); g.fill(); g.beginPath(); g.arc(x + 6, 116, 26, 0, Math.PI * 2); g.fill();
+    g.fillRect(x - 30, 240, 22, 50 + step); g.fillRect(x + 8, 240, 22, 50 - step); g.fillRect(x - 58, 160, 20, 70); g.fillRect(x + 38, 160, 20, 70);
+    g.fillStyle = "#ffd84d"; g.fillRect(x + 6, 110, 6, 4); g.fillRect(x + 18, 110, 6, 4);
+    g.strokeStyle = "#9bff4a"; g.lineWidth = 3; for (let i = 0; i < 4; i++) { const ox = x - 80 + i * 50, oy = 90 - ((tt * 30 + i * 20) % 50); g.beginPath(); g.moveTo(ox, oy + 40); g.bezierCurveTo(ox - 14, oy + 26, ox + 14, oy + 14, ox, oy); g.stroke(); }
+    centerText(g, "SKUNK APE?", w / 2, 36, 32, "#9bff4a", "#06140c");
+    return "#4aff8a";
+  }
+  if (mode === "ufo") { // alien abduction beam
+    g.fillStyle = "#04020c"; g.fillRect(0, 0, w, h);
+    const r8 = rng(21); g.fillStyle = "#fff"; for (let i = 0; i < 60; i++) g.fillRect(r8() * w, r8() * h * 0.6, 2, 2);
+    g.fillStyle = "#102030"; g.fillRect(0, h * 0.8, w, h * 0.2);
+    const ux = w / 2 + Math.sin(tt * 1.3) * 30, uy = 70 + Math.sin(tt * 2.1) * 6;
+    const beam = clamp((tt - 0.6) / 0.8);
+    if (beam > 0) { g.fillStyle = `rgba(120,255,160,${0.35 * beam})`; g.beginPath(); g.moveTo(ux - 30, uy + 14); g.lineTo(ux + 30, uy + 14); g.lineTo(ux + 110, h * 0.82); g.lineTo(ux - 110, h * 0.82); g.fill(); }
+    const py = h * 0.8 - 40 - clamp((tt - 1.4) / 3) * (h * 0.8 - 140);
+    g.save(); g.translate(ux, py); g.rotate(Math.sin(tt * 3) * 0.4); g.fillStyle = "#1fb5a8"; g.fillRect(-8, -14, 16, 28); g.fillStyle = "#e0a07a"; g.beginPath(); g.arc(0, -22, 9, 0, Math.PI * 2); g.fill(); g.restore();
+    g.fillStyle = "#9aa7c0"; g.beginPath(); g.ellipse(ux, uy, 90, 22, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#7bffb0"; g.beginPath(); g.ellipse(ux, uy - 14, 40, 22, 0, Math.PI, 0); g.fill();
+    for (let i = 0; i < 6; i++) { g.fillStyle = (Math.floor(tt * 6) + i) % 2 ? "#ffd84d" : "#ff2e88"; g.beginPath(); g.arc(ux - 70 + i * 28, uy + 4, 5, 0, Math.PI * 2); g.fill(); }
+    g.fillStyle = "rgba(0,0,0,.6)"; g.fillRect(w - 170, 14, 156, 44); centerText(g, "02:00", w - 92, 37, 30, "#7bffb0");
+    return "#7bffb0";
+  }
+  if (mode === "statue") { // four horses statue with strange symbols
+    const sky = g.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, "#2a0b3a"); sky.addColorStop(1, "#d9774a"); g.fillStyle = sky; g.fillRect(0, 0, w, h);
+    g.fillStyle = "#5a3020"; g.beginPath(); g.moveTo(0, h); g.lineTo(0, h * 0.55); g.lineTo(140, h * 0.42); g.lineTo(260, h * 0.6); g.lineTo(420, h * 0.38); g.lineTo(w, h * 0.5); g.lineTo(w, h); g.fill();
+    g.fillStyle = "#3a3a46"; g.fillRect(w / 2 - 120, 240, 240, 70);
+    for (let i = 0; i < 4; i++) { const hx = w / 2 - 90 + i * 60; g.fillStyle = "#4a4a58"; g.fillRect(hx - 18, 190, 36, 26); g.fillRect(hx + 10, 168, 12, 28); g.fillRect(hx + 14, 160, 22, 12); g.fillRect(hx - 16, 214, 6, 26); g.fillRect(hx + 10, 214, 6, 26); }
+    const sy = ["◬", "☍", "⟁", "⌖"]; const glow = 0.5 + 0.5 * Math.sin(tt * 3);
+    sy.forEach((s, i) => centerText(g, s, w / 2 - 90 + i * 60, 276, 30, `rgba(123,255,176,${0.4 + 0.6 * glow})`));
+    centerText(g, "???", w / 2, 60, 56, "#ffd84d", "#12002b");
+    return "#e08a5a";
+  }
   if (mode === "glitch") {
     drawSynth(g, w, h, tt);
     const r5 = rng(Math.floor(tt * 12) + 3);
