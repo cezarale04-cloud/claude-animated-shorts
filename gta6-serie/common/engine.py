@@ -20,7 +20,17 @@ def sh(*a):
     subprocess.run(a, check=True)
 
 
-async def _tts_one(text, path, voice_name=VOICE, rate="+14%"):
+async def _tts_one(text, path, voice_name=VOICE, rate="+14%", tries=3):
+    # the voice server sometimes answers with no audio (seen with rate "+0%"); retry before failing
+    for k in range(tries):
+        try:
+            return await _tts_try(text, path, voice_name, rate)
+        except edge_tts.exceptions.NoAudioReceived:
+            if k == tries - 1:
+                raise
+
+
+async def _tts_try(text, path, voice_name, rate):
     c = edge_tts.Communicate(text, voice_name, rate=rate, boundary="WordBoundary")
     words, audio = [], b""
     async for ch in c.stream():
