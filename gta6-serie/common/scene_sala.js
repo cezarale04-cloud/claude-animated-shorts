@@ -342,6 +342,52 @@ function drawTVNews(t) {
     if (c) centerText(g, c, w / 2, 285, 36, "#ffd84d", "#12002b");
     return "#9a7bff";
   }
+  if (mode === "police_blue" || mode === "police_black") { // GTA III police livery change
+    g.fillStyle = "#101828"; g.fillRect(0, 0, w, h); g.fillStyle = "#2a2a3a"; g.fillRect(0, h * 0.62, w, h * 0.38);
+    const blue = mode === "police_blue", x = w / 2 - 150;
+    g.fillStyle = blue ? "#2f6bff" : "#111111"; g.fillRect(x, 170, 300, 70); g.fillRect(x + 50, 120, 200, 54);
+    g.fillStyle = "#ffffff"; g.fillRect(x + 90, 190, 120, 32); g.fillStyle = "#9fd0ff"; g.fillRect(x + 66, 130, 72, 38); g.fillRect(x + 162, 130, 72, 38);
+    g.fillStyle = (Math.floor(tt * 6)) % 2 ? "#e63946" : "#3d6bff"; g.fillRect(x + 110, 104, 80, 16);
+    g.fillStyle = "#111"; g.beginPath(); g.arc(x + 70, 244, 26, 0, Math.PI * 2); g.arc(x + 230, 244, 26, 0, Math.PI * 2); g.fill();
+    centerText(g, blue ? "ANTES: AZUL E BRANCO" : "DEPOIS: PRETO E BRANCO", w / 2, 40, 30, blue ? "#9fd0ff" : "#ffffff", "#12002b");
+    if (!blue) { const k = clamp(1 - tt / 0.3); if (k > 0) { g.fillStyle = `rgba(255,255,255,${k})`; g.fillRect(0, 0, w, h); } }
+    return blue ? "#4a7bff" : "#c0c0d0";
+  }
+  if (mode === "mocap") { // motion-capture suit with markers
+    g.fillStyle = "#0a0a12"; g.fillRect(0, 0, w, h);
+    g.strokeStyle = "#1e2a44"; g.lineWidth = 1; for (let x = 0; x < w; x += 32) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); } for (let y = 0; y < h; y += 32) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
+    const sw = Math.sin(tt * 3), cx = w / 2, P = {
+      head: [cx, 80], neck: [cx, 108], hip: [cx, 200], lh: [cx - 70, 130 + sw * 30], rh: [cx + 70, 130 - sw * 30], le: [cx - 45, 120 + sw * 12], re: [cx + 45, 120 - sw * 12],
+      lk: [cx - 24, 255], rk: [cx + 24, 255], lf: [cx - 30 - sw * 10, 310], rf: [cx + 30 + sw * 10, 310] };
+    g.strokeStyle = "#2b3140"; g.lineWidth = 22; g.lineCap = "round";
+    [["neck", "hip"], ["neck", "le"], ["le", "lh"], ["neck", "re"], ["re", "rh"], ["hip", "lk"], ["lk", "lf"], ["hip", "rk"], ["rk", "rf"]].forEach(([a, b]) => { g.beginPath(); g.moveTo(...P[a]); g.lineTo(...P[b]); g.stroke(); });
+    g.fillStyle = "#2b3140"; g.beginPath(); g.arc(...P.head, 24, 0, Math.PI * 2); g.fill();
+    Object.values(P).forEach(([x, y]) => { g.fillStyle = "#7bffb0"; g.beginPath(); g.arc(x, y, 6, 0, Math.PI * 2); g.fill(); });
+    g.fillStyle = Math.floor(tt * 2) % 2 ? "#e63946" : "#5a0f16"; g.beginPath(); g.arc(40, 36, 9, 0, Math.PI * 2); g.fill(); centerText(g, "REC", 84, 37, 24, "#ffffff");
+    return "#7bffb0";
+  }
+  if (mode === "shelf") { // store shelf, game boxes pulled one by one
+    g.fillStyle = "#e9e4dc"; g.fillRect(0, 0, w, h);
+    g.fillStyle = "#8a6a4a"; [120, 240, 340].forEach((y) => g.fillRect(30, y, w - 60, 12));
+    const gone = Math.floor(tt * 3);
+    for (let r = 0; r < 3; r++) for (let i = 0; i < 9; i++) {
+      const idx = r * 9 + i; if (idx < gone) continue;
+      g.fillStyle = ["#e63946", "#2b6cb0", "#ffd84d", "#2a9d8f"][(idx * 7) % 4]; g.fillRect(50 + i * 62, [40, 160, 262][r], 46, 78);
+      g.fillStyle = "rgba(0,0,0,.25)"; g.fillRect(50 + i * 62, [40, 160, 262][r] + 60, 46, 10);
+    }
+    g.fillStyle = "#e63946"; g.save(); g.translate(w / 2, 190); g.rotate(-0.1); g.fillRect(-190, -34, 380, 68); g.restore();
+    centerText(g, "FORA DE VENDA", w / 2, 189, 44, "#ffffff");
+    return "#fff2d0";
+  }
+  if (mode === "rating") { // age rating jumps to adults only
+    g.fillStyle = "#0b0720"; g.fillRect(0, 0, w, h);
+    const up = tt > 1.2, s = up ? 1 + Math.max(0, 0.25 - (tt - 1.2)) * 2 : 1;
+    g.fillStyle = "#ffffff"; g.fillRect(w / 2 - 110 * s, 70, 220 * s, 220 * s * 0.9);
+    g.fillStyle = up ? "#e63946" : "#12002b"; g.fillRect(w / 2 - 98 * s, 82, 196 * s, 196 * s * 0.9);
+    centerText(g, up ? "18+" : "17+", w / 2, 82 + 88 * s, 96 * s, "#ffffff");
+    centerText(g, up ? "SÓ PARA ADULTOS" : "MADURO", w / 2, 325, 30, up ? "#ff8a8a" : "#9aa7d9");
+    return up ? "#ff4a5a" : "#6a6aff";
+  }
   if (mode === "topdown") { // 1997-style top-down chase
     g.fillStyle = "#2f6b2f"; g.fillRect(0, 0, w, h);
     g.fillStyle = "#555"; g.fillRect(250, 0, 140, h); g.fillRect(0, 130, w, 100);
