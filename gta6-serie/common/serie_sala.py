@@ -33,7 +33,7 @@ def part_tag():
     return lambda n: tag(None, f"PARTE {n}", PURP, size=80, anim="fade", cue=None)
 
 
-def build(name, part, total, S, label="GTA", hi="#FFD84D"):
+def build(name, part, total, S, label="GTA", hi="#FFD84D", extra=None, cfg=None):
     end = END_LAST if part == total else END_MID[part + 1]
     V = Video(name, [s[0] for s in S], GAPS[: len(S)], voice_name="pt-BR-ThalitaMultilingualNeural", rate=RATES, hi=hi,
               next_part=(part + 1 if part < total else None), end_line=end, fx=FX)
@@ -57,6 +57,10 @@ def build(name, part, total, S, label="GTA", hi="#FFD84D"):
     cams.append(["pull", V.L(n) - 0.1, V.total])
     poses.append([V.L(n) - 0.1, "cheer" if part == total else "point"])
     V.cfg.update(tv=tv, poses=poses, cams=cams, px=0.75)
+    if cfg:
+        V.cfg.update(cfg(V))
+    if extra:
+        extra(V)
     V.raw('<style>.cap{top:1420px !important}.vig{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(8,0,24,.55) 100%)}</style>')
     V.raw(f'<div id="vig" class="clip vig" data-start="0" data-duration="{V.total}" data-track-index="1"></div>')
     V.cue("boom", 0)

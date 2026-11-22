@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="assets/lib/gsap.min.js"></script>
+<style>
+:root { --pink:#ff2e88; --cyan:#3DF5FF; --yel:#ffd84d; --ink:#12002b; --font-display:"Archivo Black", sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:1080px; height:1920px; overflow:hidden; background:#1a0b3d; }
+#root { position:relative; width:1080px; height:1920px; font-family:var(--font-display); overflow:hidden; }
+#stage { position:absolute; inset:0; }
+#stage canvas { display:block; width:1080px; height:1920px; }
+.partb { position:absolute; left:0; right:0; top:196px; display:flex; justify-content:center; z-index:9; }
+.parti { font-family:"Inter", sans-serif; font-weight:900; font-size:28px; letter-spacing:3px; color:var(--ink); background:var(--yel); padding:6px 20px; border-radius:10px; }
+.title { position:absolute; left:0; right:0; top:270px; display:flex; justify-content:center; z-index:10; }
+.titlei { text-align:center; color:#fff; font-size:72px; line-height:1.05; -webkit-text-stroke:14px var(--ink); paint-order:stroke fill; text-shadow:0 0 30px rgba(255,46,136,.8); }
+.titlei em { font-style:normal; color:var(--cyan); }
+.cap { position:absolute; left:130px; right:130px; top:1170px; display:flex; justify-content:center; z-index:12; }
+.capi { text-align:center; font-size:64px; line-height:1.1; color:#fff; -webkit-text-stroke:12px #000; paint-order:stroke fill; }
+.cw { display:inline-block; }
+.it { position:absolute; left:0; right:0; display:flex; justify-content:center; z-index:11; }
+.hero { text-align:center; font-size:250px; line-height:0.95; color:#fff; -webkit-text-stroke:20px var(--ink); paint-order:stroke fill; text-shadow:0 0 60px var(--pink), 0 0 120px var(--pink); }
+.hero em { font-style:normal; color:var(--cyan); }
+.big { font-size:190px; line-height:1; color:#fff; -webkit-text-stroke:18px var(--ink); paint-order:stroke fill; text-shadow:0 0 50px var(--pink); }
+.big small { font-size:120px; color:var(--cyan); }
+.chip { background:var(--ink); color:#fff; font-size:46px; padding:12px 32px; border-radius:40px; border:4px solid var(--cyan); text-align:center; }
+.chip.red { border-color:#ff4d4d; color:#ff8a8a; }
+.note { font-family:"Inter", sans-serif; font-weight:700; font-size:28px; color:#fff; background:rgba(18,0,43,.78); padding:6px 18px; border-radius:20px; }
+.tag { color:#fff; font-size:66px; padding:10px 34px; border-radius:18px; border:6px solid #fff; box-shadow:0 10px 0 rgba(0,0,0,.35); background:var(--pink); }
+.tagsm { color:#fff; font-size:44px; padding:8px 24px; border-radius:14px; border:5px solid #fff; box-shadow:0 8px 0 rgba(0,0,0,.35); background:#7b2ff7; }
+.cta { display:flex; align-items:center; gap:22px; background:var(--pink); color:#fff; font-size:64px; padding:18px 44px; border-radius:24px; border:7px solid #fff; }
+.arrow { width:0; height:0; border-left:26px solid transparent; border-right:26px solid transparent; border-top:40px solid #fff; }
+.arrowr { width:0; height:0; border-top:26px solid transparent; border-bottom:26px solid transparent; border-left:40px solid #fff; }
+.vs { display:flex; align-items:center; gap:30px; }
+.vs .card { background:#fff; color:var(--ink); font-size:84px; padding:20px 34px; border-radius:24px; border:8px solid var(--cyan); }
+.vs .card.b { border-color:var(--pink); background:var(--ink); color:#fff; box-shadow:0 0 50px var(--pink); }
+.vs .x { font-size:90px; color:var(--yel); -webkit-text-stroke:12px var(--ink); paint-order:stroke fill; }
+.strike { position:relative; }
+.strike::after { content:""; position:absolute; left:-6%; right:-6%; top:50%; height:12px; background:#ff4d4d; transform:rotate(-6deg); border-radius:6px; }
+.mapcmp { display:flex; align-items:flex-end; gap:40px; }
+.mapcmp .m { border:7px solid #fff; border-radius:14px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:46px; text-align:center; }
+.mapcmp .a { width:230px; height:230px; background:rgba(61,245,255,.35); }
+.mapcmp .b { width:325px; height:325px; background:rgba(255,46,136,.45); box-shadow:0 0 50px var(--pink); }
+.bars { position:relative; width:820px; }
+.bars .track { height:28px; border-radius:20px; background:rgba(18,0,43,.75); border:5px solid #fff; overflow:hidden; }
+.bars .fill { height:100%; background:linear-gradient(90deg,var(--pink),var(--cyan)); transform-origin:left center; }
+.bars .ticks { display:flex; justify-content:space-between; color:#fff; font-size:38px; margin-top:12px; -webkit-text-stroke:8px var(--ink); paint-order:stroke fill; text-align:center; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px 24px; width:880px; }
+.phone { width:340px; height:600px; border-radius:46px; background:#0d0221; border:10px solid #fff; position:relative; overflow:hidden; box-shadow:0 0 60px var(--pink); }
+.phone .scr { position:absolute; inset:0; background:linear-gradient(180deg,#ff2e88,#7b2ff7 55%,#12002b); }
+.phone .user { position:absolute; left:22px; bottom:120px; color:#fff; font-family:"Inter",sans-serif; font-weight:900; font-size:28px; }
+.phone .views { position:absolute; left:22px; bottom:70px; color:var(--yel); font-size:40px; }
+.phone .rail { position:absolute; right:18px; bottom:90px; display:flex; flex-direction:column; gap:22px; }
+.phone .dot { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.9); }
+.phone .play { position:absolute; left:50%; top:38%; width:0; height:0; border-top:50px solid transparent; border-bottom:50px solid transparent; border-left:80px solid rgba(255,255,255,.85); transform:translate(-35%,-50%); }
+.trophy { display:flex; flex-direction:column; align-items:center; }
+.trophy .cup { width:150px; height:120px; background:var(--yel); border-radius:0 0 75px 75px; border:8px solid var(--ink); }
+.trophy .stem { width:40px; height:40px; background:var(--yel); border-left:8px solid var(--ink); border-right:8px solid var(--ink); }
+.trophy .base { width:150px; height:34px; background:var(--yel); border:8px solid var(--ink); border-radius:8px; }
+
+.heart { position:relative; width:60px; height:54px; display:inline-block; }
+.heart::before, .heart::after { content:""; position:absolute; top:0; width:32px; height:52px; background:#fff; border-radius:32px 32px 0 0; }
+.heart::before { left:30px; transform:rotate(-45deg); transform-origin:0 100%; }
+.heart::after { left:-2px; transform:rotate(45deg); transform-origin:100% 100%; }
+
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="27.43" data-width="1080" data-height="1920">
+  <div id="stage" class="clip" data-start="0" data-duration="27.43" data-track-index="0" data-track-kind="graphics"></div>
+  <div id="part" class="clip partb" data-start="0" data-duration="27.43" data-track-index="1"><div class="parti">VOCÊ ESCOLHE · PARTE 3/4</div></div>
+  <div id="t0" class="clip title" data-start="0.00" data-duration="4.47" data-track-index="2"><div id="t0i" class="titlei">ELE <em>COMPROU!</em></div></div>
+<div id="t1" class="clip title" data-start="4.47" data-duration="2.48" data-track-index="2"><div id="t1i" class="titlei">MAS <em>AGORA...</em></div></div>
+<div id="t2" class="clip title" data-start="6.95" data-duration="2.76" data-track-index="2"><div id="t2i" class="titlei">CASA OU <em>VÓ?</em></div></div>
+<div id="t3" class="clip title" data-start="9.71" data-duration="3.98" data-track-index="2"><div id="t3i" class="titlei">🏠 <em>CASA</em></div></div>
+<div id="t4" class="clip title" data-start="13.68" data-duration="3.45" data-track-index="2"><div id="t4i" class="titlei">👵 <em>VÓ</em></div></div>
+<div id="t5" class="clip title" data-start="17.13" data-duration="4.44" data-track-index="2"><div id="t5i" class="titlei">VOCÊ <em>ESCOLHE!</em></div></div>
+<div id="t6" class="clip title" data-start="21.57" data-duration="2.82" data-track-index="2"><div id="t6i" class="titlei">NA <em>PARTE 4</em></div></div>
+<div id="i1" class="clip it" style="top:1180px" data-start="0.10" data-duration="4.37" data-track-index="4"><div id="i1i" class="tag" style="background:#ff2e88;font-size:50px">🏆 VOCÊS ESCOLHERAM: GTA 6</div></div>
+<div id="i2" class="clip it" style="top:1180px" data-start="7.00" data-duration="2.71" data-track-index="4"><div id="i2i" class="tag" style="background:#7b2ff7;font-size:60px">🏠 CASA  ou  👵 VÓ?</div></div>
+<div id="i3" class="clip it" style="top:1180px" data-start="11.94" data-duration="1.74" data-track-index="4"><div id="i3i" class="tag" style="background:#2b6cb0;font-size:70px">🎮 JOGA HOJE!</div></div>
+<div id="i4" class="clip it" style="top:1180px" data-start="16.22" data-duration="0.91" data-track-index="4"><div id="i4i" class="tag" style="background:#c2338a;font-size:70px">⏰ SÓ AMANHÃ</div></div>
+<div id="i5" class="clip it" style="top:1300px" data-start="23.22" data-duration="1.17" data-track-index="4"><div id="i5i" class="tag" style="background:#7b2ff7;font-size:64px">NA PARTE 4 👀</div></div>
+<style>.cap{top:1440px !important}</style>
+<style>.vote{position:absolute;left:70px;right:70px;top:360px;z-index:8;display:flex;flex-direction:column;gap:14px;font-family:Inter,sans-serif}.vh{align-self:center;background:#12002b;color:#ffd84d;font-weight:900;font-size:36px;letter-spacing:6px;padding:8px 22px;border-radius:12px}.vr{display:flex;align-items:center;gap:16px;background:rgba(18,0,43,.82);border:5px solid #12002b;border-radius:18px;padding:12px 16px}.vn{width:230px;font-weight:900;font-size:44px;color:#fff}.vb{flex:1;height:46px;background:rgba(255,255,255,.15);border-radius:12px;overflow:hidden}.vf{height:100%;width:50%;border-radius:12px}.vq{width:90px;text-align:right;font-weight:900;font-size:44px;color:#fff}</style>
+<div id="vote" class="clip vote" data-start="17.13" data-duration="7.21" data-track-index="6"><div class="vh">VOTAÇÃO ABERTA</div><div class="vr"><div class="vn">🏠 CASA</div><div class="vb"><div id="vfa" class="vf" style="background:#2b6cb0"></div></div><div id="vqa" class="vq">?</div></div><div class="vr"><div class="vn">👵 VÓ</div><div class="vb"><div id="vfb" class="vf" style="background:#c2338a"></div></div><div id="vqb" class="vq">?</div></div></div>
+<div id="t7" class="clip title" data-start="24.39" data-duration="3.04" data-track-index="2"><div id="t7i" class="titlei">PARTE <em>4</em> NO PERFIL!</div></div>
+<div id="i6" class="clip it" style="top:470px" data-start="24.44" data-duration="2.99" data-track-index="4"><div id="i6i" class="tag" style="background:#7b2ff7;font-size:84px">CONTINUA...</div></div>
+<div id="i7" class="clip it" style="top:700px" data-start="24.49" data-duration="2.94" data-track-index="4"><div id="i7i" class="tag" style="background:#3DF5FF;color:#12002b;font-size:110px;border-color:#12002b">+ SEGUIR</div></div>
+  <div id="cap0" class="clip cap" data-start="0.140" data-duration="1.369" data-track-index="3"><div id="capi0" class="capi"><span id="w0_0" class="cw">PARTE</span> <span id="w0_1" class="cw">TRÊS</span> <span id="w0_2" class="cw">VOCÊS</span></div></div>
+<div id="cap1" class="clip cap" data-start="1.509" data-duration="1.071" data-track-index="3"><div id="capi1" class="capi"><span id="w1_0" class="cw">ESCOLHERAM</span> <span id="w1_1" class="cw">O</span> <span id="w1_2" class="cw">GTA</span></div></div>
+<div id="cap2" class="clip cap" data-start="2.580" data-duration="0.965" data-track-index="3"><div id="capi2" class="capi"><span id="w2_0" class="cw">6</span> <span id="w2_1" class="cw">E</span> <span id="w2_2" class="cw">ELE</span></div></div>
+<div id="cap3" class="clip cap" data-start="3.545" data-duration="1.014" data-track-index="3"><div id="capi3" class="capi"><span id="w3_0" class="cw">COMPROU</span></div></div>
+<div id="cap4" class="clip cap" data-start="4.559" data-duration="0.977" data-track-index="3"><div id="capi4" class="capi"><span id="w4_0" class="cw">MAS</span> <span id="w4_1" class="cw">AGORA</span> <span id="w4_2" class="cw">TEM</span></div></div>
+<div id="cap5" class="clip cap" data-start="5.536" data-duration="1.389" data-track-index="3"><div id="capi5" class="capi"><span id="w5_0" class="cw">OUTRO</span> <span id="w5_1" class="cw">PROBLEMA</span></div></div>
+<div id="cap6" class="clip cap" data-start="7.032" data-duration="0.514" data-track-index="3"><div id="capi6" class="capi"><span id="w6_0" class="cw">ELE</span> <span id="w6_1" class="cw">VAI</span> <span id="w6_2" class="cw">PRA</span></div></div>
+<div id="cap7" class="clip cap" data-start="7.546" data-duration="0.970" data-track-index="3"><div id="capi7" class="capi"><span id="w7_0" class="cw">CASA</span> <span id="w7_1" class="cw">DELE</span> <span id="w7_2" class="cw">OU</span></div></div>
+<div id="cap8" class="clip cap" data-start="8.516" data-duration="0.549" data-track-index="3"><div id="capi8" class="capi"><span id="w8_0" class="cw">PRA</span> <span id="w8_1" class="cw">CASA</span> <span id="w8_2" class="cw">DA</span></div></div>
+<div id="cap9" class="clip cap" data-start="9.065" data-duration="0.732" data-track-index="3"><div id="capi9" class="capi"><span id="w9_0" class="cw">VÓ</span></div></div>
+<div id="cap10" class="clip cap" data-start="9.797" data-duration="0.505" data-track-index="3"><div id="capi10" class="capi"><span id="w10_0" class="cw">SE</span> <span id="w10_1" class="cw">FOR</span> <span id="w10_2" class="cw">PRA</span></div></div>
+<div id="cap11" class="clip cap" data-start="10.302" data-duration="1.149" data-track-index="3"><div id="capi11" class="capi"><span id="w11_0" class="cw">CASA</span> <span id="w11_1" class="cw">ELE</span> <span id="w11_2" class="cw">JOGA</span></div></div>
+<div id="cap12" class="clip cap" data-start="11.451" data-duration="1.162" data-track-index="3"><div id="capi12" class="capi"><span id="w12_0" class="cw">O</span> <span id="w12_1" class="cw">GTA</span> <span id="w12_2" class="cw">6 HOJE</span></div></div>
+<div id="cap13" class="clip cap" data-start="12.613" data-duration="1.001" data-track-index="3"><div id="capi13" class="capi"><span id="w13_0" class="cw">MESMO</span></div></div>
+<div id="cap14" class="clip cap" data-start="13.773" data-duration="0.588" data-track-index="3"><div id="capi14" class="capi"><span id="w14_0" class="cw">SE</span> <span id="w14_1" class="cw">FOR</span> <span id="w14_2" class="cw">PRA</span></div></div>
+<div id="cap15" class="clip cap" data-start="14.361" data-duration="0.902" data-track-index="3"><div id="capi15" class="capi"><span id="w15_0" class="cw">CASA</span> <span id="w15_1" class="cw">DA</span> <span id="w15_2" class="cw">VÓ</span></div></div>
+<div id="cap16" class="clip cap" data-start="15.263" data-duration="0.625" data-track-index="3"><div id="capi16" class="capi"><span id="w16_0" class="cw">SÓ</span> <span id="w16_1" class="cw">VAI</span> <span id="w16_2" class="cw">PODER</span></div></div>
+<div id="cap17" class="clip cap" data-start="15.888" data-duration="1.305" data-track-index="3"><div id="capi17" class="capi"><span id="w17_0" class="cw">JOGAR</span> <span id="w17_1" class="cw">AMANHÃ</span></div></div>
+<div id="cap18" class="clip cap" data-start="17.223" data-duration="0.735" data-track-index="3"><div id="capi18" class="capi"><span id="w18_0" class="cw">QUEM</span> <span id="w18_1" class="cw">DECIDE</span> <span id="w18_2" class="cw">É</span></div></div>
+<div id="cap19" class="clip cap" data-start="17.958" data-duration="1.103" data-track-index="3"><div id="capi19" class="capi"><span id="w19_0" class="cw">VOCÊ</span> <span id="w19_1" class="cw">DE</span> <span id="w19_2" class="cw">NOVO</span></div></div>
+<div id="cap20" class="clip cap" data-start="19.061" data-duration="1.520" data-track-index="3"><div id="capi20" class="capi"><span id="w20_0" class="cw">COMENTA</span> <span id="w20_1" class="cw">AÍ</span> <span id="w20_2" class="cw">CASA</span></div></div>
+<div id="cap21" class="clip cap" data-start="20.581" data-duration="0.989" data-track-index="3"><div id="capi21" class="capi"><span id="w21_0" class="cw">OU</span> <span id="w21_1" class="cw">VÓ</span></div></div>
+<div id="cap22" class="clip cap" data-start="21.658" data-duration="0.872" data-track-index="3"><div id="capi22" class="capi"><span id="w22_0" class="cw">O</span> <span id="w22_1" class="cw">MAIS</span> <span id="w22_2" class="cw">COMENTADO</span></div></div>
+<div id="cap23" class="clip cap" data-start="22.530" data-duration="0.991" data-track-index="3"><div id="capi23" class="capi"><span id="w23_0" class="cw">ACONTECE</span> <span id="w23_1" class="cw">NA</span> <span id="w23_2" class="cw">PARTE</span></div></div>
+<div id="cap24" class="clip cap" data-start="23.521" data-duration="0.949" data-track-index="3"><div id="capi24" class="capi"><span id="w24_0" class="cw">QUATRO</span></div></div>
+<div id="cap25" class="clip cap" data-start="24.480" data-duration="0.804" data-track-index="3"><div id="capi25" class="capi"><span id="w25_0" class="cw">SEGUE</span> <span id="w25_1" class="cw">O</span> <span id="w25_2" class="cw">PERFIL</span></div></div>
+<div id="cap26" class="clip cap" data-start="25.284" data-duration="0.545" data-track-index="3"><div id="capi26" class="capi"><span id="w26_0" class="cw">PRA</span> <span id="w26_1" class="cw">VER</span> <span id="w26_2" class="cw">PRA</span></div></div>
+<div id="cap27" class="clip cap" data-start="25.829" data-duration="1.278" data-track-index="3"><div id="capi27" class="capi"><span id="w27_0" class="cw">ONDE</span> <span id="w27_1" class="cw">ELE</span> <span id="w27_2" class="cw">VAI</span></div></div>
+  <audio id="mix" src="assets/audio/mix.wav" data-start="0" data-duration="27.43" data-track-index="9"></audio>
+</div>
+<script>window.__cfg = {"storm": [], "lightning": [], "animals": false, "rise": null, "flash": null, "only": "gta", "walkEnd": 0.01, "px": 0.75, "acts": [[0, "raise_gta"], [4.469, "think"], [6.945, "look_gta"], [9.707, "look_zel"], [13.684000000000001, "think"], [17.133, "ask"], [21.57, "hold2"], [24.389999999999997, "ask"]], "shots": [], "total": 27.43};</script>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#t1i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},4.47);
+tl.fromTo("#t2i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},6.95);
+tl.fromTo("#t3i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},9.71);
+tl.fromTo("#t4i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},13.68);
+tl.fromTo("#t5i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},17.13);
+tl.fromTo("#t6i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},21.57);
+tl.fromTo("#i1i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},0.10);
+tl.fromTo("#i2i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},7.00);
+tl.fromTo("#i3i",{x:-800,rotation:-5},{x:0,rotation:-3,duration:0.26,ease:'back.out(1.6)'},11.94);
+tl.fromTo("#i4i",{x:800,rotation:5},{x:0,rotation:3,duration:0.26,ease:'back.out(1.6)'},16.22);
+tl.fromTo("#i5i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},23.22);
+tl.fromTo("#vote",{y:-60,opacity:0},{y:0,opacity:1,duration:0.3,ease:"back.out(2)"},17.18);
+tl.to("#vfa",{width:"38%",duration:0.4,ease:"sine.inOut"},17.43);tl.to("#vfb",{width:"62%",duration:0.4,ease:"sine.inOut"},17.43);
+tl.to("#vfa",{width:"41%",duration:0.4,ease:"sine.inOut"},17.88);tl.to("#vfb",{width:"59%",duration:0.4,ease:"sine.inOut"},17.88);
+tl.to("#vfa",{width:"44%",duration:0.4,ease:"sine.inOut"},18.33);tl.to("#vfb",{width:"56%",duration:0.4,ease:"sine.inOut"},18.33);
+tl.to("#vfa",{width:"47%",duration:0.4,ease:"sine.inOut"},18.78);tl.to("#vfb",{width:"53%",duration:0.4,ease:"sine.inOut"},18.78);
+tl.to("#vfa",{width:"50%",duration:0.4,ease:"sine.inOut"},19.23);tl.to("#vfb",{width:"50%",duration:0.4,ease:"sine.inOut"},19.23);
+tl.to("#vfa",{width:"53%",duration:0.4,ease:"sine.inOut"},19.68);tl.to("#vfb",{width:"47%",duration:0.4,ease:"sine.inOut"},19.68);
+tl.to("#vfa",{width:"56%",duration:0.4,ease:"sine.inOut"},20.13);tl.to("#vfb",{width:"44%",duration:0.4,ease:"sine.inOut"},20.13);
+tl.to("#vfa",{width:"59%",duration:0.4,ease:"sine.inOut"},20.58);tl.to("#vfb",{width:"41%",duration:0.4,ease:"sine.inOut"},20.58);
+tl.to("#vfa",{width:"62%",duration:0.4,ease:"sine.inOut"},21.03);tl.to("#vfb",{width:"38%",duration:0.4,ease:"sine.inOut"},21.03);
+tl.to("#vfa",{width:"39%",duration:0.4,ease:"sine.inOut"},21.48);tl.to("#vfb",{width:"61%",duration:0.4,ease:"sine.inOut"},21.48);
+tl.to("#vfa",{width:"42%",duration:0.4,ease:"sine.inOut"},21.93);tl.to("#vfb",{width:"58%",duration:0.4,ease:"sine.inOut"},21.93);
+tl.to("#vfa",{width:"45%",duration:0.4,ease:"sine.inOut"},22.38);tl.to("#vfb",{width:"55%",duration:0.4,ease:"sine.inOut"},22.38);
+tl.to("#vfa",{width:"48%",duration:0.4,ease:"sine.inOut"},22.83);tl.to("#vfb",{width:"52%",duration:0.4,ease:"sine.inOut"},22.83);
+tl.to("#vfa",{width:"51%",duration:0.4,ease:"sine.inOut"},23.28);tl.to("#vfb",{width:"49%",duration:0.4,ease:"sine.inOut"},23.28);
+tl.to("#vfa",{width:"54%",duration:0.4,ease:"sine.inOut"},23.73);tl.to("#vfb",{width:"46%",duration:0.4,ease:"sine.inOut"},23.73);
+tl.fromTo("#t7i",{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.2,ease:"back.out(2)"},24.39);
+tl.fromTo("#i6i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},24.44);
+tl.fromTo("#i7i",{scale:2.2,opacity:0,rotation:-8},{scale:1,opacity:1,rotation:0,duration:0.24,ease:'back.out(2)'},24.49);
+tl.to("#i7i",{scale:1.1,duration:0.18,yoyo:true,repeat:5,ease:"sine.inOut"},24.84);
+tl.set("#w0_0",{color:"#FFD84D",scale:1.08},0.180);
+tl.set("#w0_0",{color:"#FFFFFF",scale:1},0.577);
+tl.set("#w0_1",{color:"#FFD84D",scale:1.08},0.537);
+tl.set("#w0_1",{color:"#FFFFFF",scale:1},0.982);
+tl.set("#w0_2",{color:"#FFD84D",scale:1.08},1.275);
+tl.set("#w0_2",{color:"#FFFFFF",scale:1},1.589);
+tl.fromTo("#capi0",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},0.140);
+tl.set("#w1_0",{color:"#FFD84D",scale:1.08},1.549);
+tl.set("#w1_0",{color:"#FFFFFF",scale:1},2.160);
+tl.set("#w1_1",{color:"#FFD84D",scale:1.08},2.120);
+tl.set("#w1_1",{color:"#FFFFFF",scale:1},2.196);
+tl.set("#w1_2",{color:"#FFD84D",scale:1.08},2.156);
+tl.set("#w1_2",{color:"#FFFFFF",scale:1},2.660);
+tl.fromTo("#capi1",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},1.509);
+tl.set("#w2_0",{color:"#FFD84D",scale:1.08},2.620);
+tl.set("#w2_0",{color:"#FFFFFF",scale:1},3.149);
+tl.set("#w2_1",{color:"#FFD84D",scale:1.08},3.335);
+tl.set("#w2_1",{color:"#FFFFFF",scale:1},3.458);
+tl.set("#w2_2",{color:"#FFD84D",scale:1.08},3.418);
+tl.set("#w2_2",{color:"#FFFFFF",scale:1},3.625);
+tl.fromTo("#capi2",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},2.580);
+tl.set("#w3_0",{color:"#FFD84D",scale:1.08},3.585);
+tl.set("#w3_0",{color:"#FFFFFF",scale:1},4.089);
+tl.fromTo("#capi3",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},3.545);
+tl.set("#w4_0",{color:"#FFD84D",scale:1.08},4.599);
+tl.set("#w4_0",{color:"#FFFFFF",scale:1},4.837);
+tl.set("#w4_1",{color:"#FFD84D",scale:1.08},4.797);
+tl.set("#w4_1",{color:"#FFFFFF",scale:1},5.356);
+tl.set("#w4_2",{color:"#FFD84D",scale:1.08},5.316);
+tl.set("#w4_2",{color:"#FFFFFF",scale:1},5.616);
+tl.fromTo("#capi4",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},4.559);
+tl.set("#w5_0",{color:"#FFD84D",scale:1.08},5.576);
+tl.set("#w5_0",{color:"#FFFFFF",scale:1},5.926);
+tl.set("#w5_1",{color:"#FFD84D",scale:1.08},5.886);
+tl.set("#w5_1",{color:"#FFFFFF",scale:1},6.445);
+tl.fromTo("#capi5",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},5.536);
+tl.set("#w6_0",{color:"#FFD84D",scale:1.08},7.072);
+tl.set("#w6_0",{color:"#FFFFFF",scale:1},7.299);
+tl.set("#w6_1",{color:"#FFD84D",scale:1.08},7.259);
+tl.set("#w6_1",{color:"#FFFFFF",scale:1},7.474);
+tl.set("#w6_2",{color:"#FFD84D",scale:1.08},7.434);
+tl.set("#w6_2",{color:"#FFFFFF",scale:1},7.626);
+tl.fromTo("#capi6",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},7.032);
+tl.set("#w7_0",{color:"#FFD84D",scale:1.08},7.586);
+tl.set("#w7_0",{color:"#FFFFFF",scale:1},7.942);
+tl.set("#w7_1",{color:"#FFD84D",scale:1.08},7.902);
+tl.set("#w7_1",{color:"#FFFFFF",scale:1},8.304);
+tl.set("#w7_2",{color:"#FFD84D",scale:1.08},8.427);
+tl.set("#w7_2",{color:"#FFFFFF",scale:1},8.596);
+tl.fromTo("#capi7",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},7.546);
+tl.set("#w8_0",{color:"#FFD84D",scale:1.08},8.556);
+tl.set("#w8_0",{color:"#FFFFFF",scale:1},8.748);
+tl.set("#w8_1",{color:"#FFD84D",scale:1.08},8.708);
+tl.set("#w8_1",{color:"#FFFFFF",scale:1},9.028);
+tl.set("#w8_2",{color:"#FFD84D",scale:1.08},8.988);
+tl.set("#w8_2",{color:"#FFFFFF",scale:1},9.145);
+tl.fromTo("#capi8",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},8.516);
+tl.set("#w9_0",{color:"#FFD84D",scale:1.08},9.105);
+tl.set("#w9_0",{color:"#FFFFFF",scale:1},9.367);
+tl.fromTo("#capi9",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},9.065);
+tl.set("#w10_0",{color:"#FFD84D",scale:1.08},9.837);
+tl.set("#w10_0",{color:"#FFFFFF",scale:1},10.054);
+tl.set("#w10_1",{color:"#FFD84D",scale:1.08},10.014);
+tl.set("#w10_1",{color:"#FFFFFF",scale:1},10.218);
+tl.set("#w10_2",{color:"#FFD84D",scale:1.08},10.178);
+tl.set("#w10_2",{color:"#FFFFFF",scale:1},10.382);
+tl.fromTo("#capi10",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},9.797);
+tl.set("#w11_0",{color:"#FFD84D",scale:1.08},10.342);
+tl.set("#w11_0",{color:"#FFFFFF",scale:1},10.824);
+tl.set("#w11_1",{color:"#FFD84D",scale:1.08},10.973);
+tl.set("#w11_1",{color:"#FFFFFF",scale:1},11.177);
+tl.set("#w11_2",{color:"#FFD84D",scale:1.08},11.137);
+tl.set("#w11_2",{color:"#FFFFFF",scale:1},11.531);
+tl.fromTo("#capi11",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},10.302);
+tl.set("#w12_0",{color:"#FFD84D",scale:1.08},11.491);
+tl.set("#w12_0",{color:"#FFFFFF",scale:1},11.544);
+tl.set("#w12_1",{color:"#FFD84D",scale:1.08},11.504);
+tl.set("#w12_1",{color:"#FFFFFF",scale:1},12.011);
+tl.set("#w12_2",{color:"#FFD84D",scale:1.08},11.971);
+tl.set("#w12_2",{color:"#FFFFFF",scale:1},12.693);
+tl.fromTo("#capi12",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},11.451);
+tl.set("#w13_0",{color:"#FFD84D",scale:1.08},12.653);
+tl.set("#w13_0",{color:"#FFFFFF",scale:1},13.134);
+tl.fromTo("#capi13",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},12.613);
+tl.set("#w14_0",{color:"#FFD84D",scale:1.08},13.813);
+tl.set("#w14_0",{color:"#FFFFFF",scale:1},14.045);
+tl.set("#w14_1",{color:"#FFD84D",scale:1.08},14.005);
+tl.set("#w14_1",{color:"#FFFFFF",scale:1},14.273);
+tl.set("#w14_2",{color:"#FFD84D",scale:1.08},14.233);
+tl.set("#w14_2",{color:"#FFFFFF",scale:1},14.441);
+tl.fromTo("#capi14",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},13.773);
+tl.set("#w15_0",{color:"#FFD84D",scale:1.08},14.401);
+tl.set("#w15_0",{color:"#FFFFFF",scale:1},14.754);
+tl.set("#w15_1",{color:"#FFD84D",scale:1.08},14.714);
+tl.set("#w15_1",{color:"#FFFFFF",scale:1},14.886);
+tl.set("#w15_2",{color:"#FFD84D",scale:1.08},14.846);
+tl.set("#w15_2",{color:"#FFFFFF",scale:1},15.103);
+tl.fromTo("#capi15",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},14.361);
+tl.set("#w16_0",{color:"#FFD84D",scale:1.08},15.303);
+tl.set("#w16_0",{color:"#FFFFFF",scale:1},15.475);
+tl.set("#w16_1",{color:"#FFD84D",scale:1.08},15.435);
+tl.set("#w16_1",{color:"#FFFFFF",scale:1},15.619);
+tl.set("#w16_2",{color:"#FFD84D",scale:1.08},15.579);
+tl.set("#w16_2",{color:"#FFFFFF",scale:1},15.968);
+tl.fromTo("#capi16",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},15.263);
+tl.set("#w17_0",{color:"#FFD84D",scale:1.08},15.928);
+tl.set("#w17_0",{color:"#FFFFFF",scale:1},16.292);
+tl.set("#w17_1",{color:"#FFD84D",scale:1.08},16.252);
+tl.set("#w17_1",{color:"#FFFFFF",scale:1},16.713);
+tl.fromTo("#capi17",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},15.888);
+tl.set("#w18_0",{color:"#FFD84D",scale:1.08},17.263);
+tl.set("#w18_0",{color:"#FFFFFF",scale:1},17.462);
+tl.set("#w18_1",{color:"#FFD84D",scale:1.08},17.422);
+tl.set("#w18_1",{color:"#FFFFFF",scale:1},18.002);
+tl.set("#w18_2",{color:"#FFD84D",scale:1.08},17.962);
+tl.set("#w18_2",{color:"#FFFFFF",scale:1},18.038);
+tl.fromTo("#capi18",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},17.223);
+tl.set("#w19_0",{color:"#FFD84D",scale:1.08},17.998);
+tl.set("#w19_0",{color:"#FFFFFF",scale:1},18.320);
+tl.set("#w19_1",{color:"#FFD84D",scale:1.08},18.280);
+tl.set("#w19_1",{color:"#FFFFFF",scale:1},18.418);
+tl.set("#w19_2",{color:"#FFD84D",scale:1.08},18.378);
+tl.set("#w19_2",{color:"#FFFFFF",scale:1},18.798);
+tl.fromTo("#capi19",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},17.958);
+tl.set("#w20_0",{color:"#FFD84D",scale:1.08},19.101);
+tl.set("#w20_0",{color:"#FFFFFF",scale:1},19.521);
+tl.set("#w20_1",{color:"#FFD84D",scale:1.08},19.481);
+tl.set("#w20_1",{color:"#FFFFFF",scale:1},19.766);
+tl.set("#w20_2",{color:"#FFD84D",scale:1.08},20.008);
+tl.set("#w20_2",{color:"#FFFFFF",scale:1},20.477);
+tl.fromTo("#capi20",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},19.061);
+tl.set("#w21_0",{color:"#FFD84D",scale:1.08},20.621);
+tl.set("#w21_0",{color:"#FFFFFF",scale:1},20.783);
+tl.set("#w21_1",{color:"#FFD84D",scale:1.08},20.743);
+tl.set("#w21_1",{color:"#FFFFFF",scale:1},21.090);
+tl.fromTo("#capi21",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},20.581);
+tl.set("#w22_0",{color:"#FFD84D",scale:1.08},21.698);
+tl.set("#w22_0",{color:"#FFFFFF",scale:1},21.797);
+tl.set("#w22_1",{color:"#FFD84D",scale:1.08},21.757);
+tl.set("#w22_1",{color:"#FFFFFF",scale:1},22.068);
+tl.set("#w22_2",{color:"#FFD84D",scale:1.08},22.028);
+tl.set("#w22_2",{color:"#FFFFFF",scale:1},22.610);
+tl.fromTo("#capi22",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},21.658);
+tl.set("#w23_0",{color:"#FFD84D",scale:1.08},22.570);
+tl.set("#w23_0",{color:"#FFFFFF",scale:1},23.176);
+tl.set("#w23_1",{color:"#FFD84D",scale:1.08},23.136);
+tl.set("#w23_1",{color:"#FFFFFF",scale:1},23.294);
+tl.set("#w23_2",{color:"#FFD84D",scale:1.08},23.254);
+tl.set("#w23_2",{color:"#FFFFFF",scale:1},23.601);
+tl.fromTo("#capi23",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},22.530);
+tl.set("#w24_0",{color:"#FFD84D",scale:1.08},23.561);
+tl.set("#w24_0",{color:"#FFFFFF",scale:1},23.990);
+tl.fromTo("#capi24",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},23.521);
+tl.set("#w25_0",{color:"#FFD84D",scale:1.08},24.520);
+tl.set("#w25_0",{color:"#FFFFFF",scale:1},24.968);
+tl.set("#w25_1",{color:"#FFD84D",scale:1.08},24.928);
+tl.set("#w25_1",{color:"#FFFFFF",scale:1},25.005);
+tl.set("#w25_2",{color:"#FFD84D",scale:1.08},24.965);
+tl.set("#w25_2",{color:"#FFFFFF",scale:1},25.364);
+tl.fromTo("#capi25",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},24.480);
+tl.set("#w26_0",{color:"#FFD84D",scale:1.08},25.324);
+tl.set("#w26_0",{color:"#FFFFFF",scale:1},25.537);
+tl.set("#w26_1",{color:"#FFD84D",scale:1.08},25.497);
+tl.set("#w26_1",{color:"#FFFFFF",scale:1},25.698);
+tl.set("#w26_2",{color:"#FFD84D",scale:1.08},25.658);
+tl.set("#w26_2",{color:"#FFFFFF",scale:1},25.909);
+tl.fromTo("#capi26",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},25.284);
+tl.set("#w27_0",{color:"#FFD84D",scale:1.08},25.869);
+tl.set("#w27_0",{color:"#FFFFFF",scale:1},26.169);
+tl.set("#w27_1",{color:"#FFD84D",scale:1.08},26.129);
+tl.set("#w27_1",{color:"#FFFFFF",scale:1},26.292);
+tl.set("#w27_2",{color:"#FFD84D",scale:1.08},26.252);
+tl.set("#w27_2",{color:"#FFFFFF",scale:1},26.627);
+tl.fromTo("#capi27",{scale:0.82,y:14},{scale:1,y:0,duration:0.16,ease:"back.out(2.5)"},25.829);
+window.__timelines["main"] = tl;
+tl.seek(0);
+</script>
+<script type="module" src="assets/scene.js"></script>
+</body>
+</html>

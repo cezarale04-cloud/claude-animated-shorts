@@ -82,3 +82,81 @@ Qual jogo ele compra na próxima? Comenta 👇
 #Zelda #GTA6 #Gamer #VoceEscolhe #Reels
 ```
 Comentário fixado: `Qual jogo ele compra na próxima? 👇`
+
+---
+
+# Continuação (o GTA 6 ganhou): casa ou casa da vó?
+
+Como funciona: poste a **Parte 3**, conte os comentários "CASA" e "VÓ" e depois poste só a **Parte 4** que ganhar.
+
+## Parte 3/4: `renders/gta-escolha3.mp4`
+
+**YouTube** · Título: `Ele COMPROU o GTA 6! Mas vai pra casa ou pra casa da VÓ? 🏠👵 (Parte 3)`
+```
+Vocês escolheram o GTA 6 e ele comprou! 🏆
+Agora: se for pra casa, joga hoje. Se for pra casa da vó, só amanhã 😱
+Comenta CASA ou VÓ 👇 O mais comentado acontece na parte 4.
+
+📌 Parte 3 de 4. As partes 1 e 2 estão no perfil!
+
+#GTA6 #Shorts #Gamer #VoceEscolhe #Vovo
+```
+
+**Instagram**
+```
+Ele comprou o GTA 6! 🏆 Mas vai pra casa ou pra casa da vó? 🏠👵
+Comenta CASA ou VÓ 👇 O resultado sai na parte 4!
+
+📌 Parte 3 de 4
+
+#GTA6 #Gamer #VoceEscolhe #Vovo #Reels
+```
+Comentário fixado: `Vota aqui: CASA ou VÓ? 👇 O resultado sai na parte 4!`
+
+## Parte 4/4 (se ganhar CASA): `renders/gta-escolha4casa.mp4`
+
+**YouTube** · Título: `VOCÊS ESCOLHERAM: CASA! Direto pro GTA 6 🎮 (Parte 4)`
+```
+Casa venceu! Videogame ligado, GTA 6 carregando... e começou! 🎮
+Agora ele só sai do sofá quando zerar 😂
+
+📌 Parte 4 de 4 (final). As outras partes estão no perfil!
+Curte, deixa o like e segue pra próxima votação.
+
+#GTA6 #Shorts #Gamer #VoceEscolhe #PS5
+```
+
+**Instagram**
+```
+VOCÊS ESCOLHERAM: CASA! 🏠🎮
+E você, já está jogando o GTA 6? Comenta 👇
+
+📌 Parte 4 de 4
+
+#GTA6 #Gamer #VoceEscolhe #PS5 #Reels
+```
+Comentário fixado: `Você já está jogando o GTA 6? 👇`
+
+## Parte 4/4 (se ganhar VÓ): `renders/gta-escolha4vo.mp4`
+
+**YouTube** · Título: `VOCÊS ESCOLHERAM: CASA DA VÓ! Sem videogame 😭 (Parte 4)`
+```
+Vó venceu! Bolo, café e abraço apertado... mas na casa da vó não tem videogame, só novela 😂
+O GTA 6 teve que esperar até o dia seguinte.
+
+📌 Parte 4 de 4 (final). As outras partes estão no perfil!
+Curte, deixa o like e segue pra próxima votação.
+
+#GTA6 #Shorts #Gamer #VoceEscolhe #Vovo
+```
+
+**Instagram**
+```
+VOCÊS ESCOLHERAM: CASA DA VÓ! 👵❤️
+Sem videogame, só novela 😂 Valeu a pena esperar? Comenta 👇
+
+📌 Parte 4 de 4
+
+#GTA6 #Gamer #VoceEscolhe #Vovo #Reels
+```
+Comentário fixado: `Valeu a pena esperar um dia pelo GTA 6? 👇`

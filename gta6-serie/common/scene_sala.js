@@ -300,6 +300,19 @@ let tvTex, tvCanvas, tvCtx, skyMat, tvLight, lampLight, winLight, roomHemi, tabl
   Object.assign(winLight.shadow.camera, { left: -3.5, right: 3.5, top: 3.5, bottom: -3.5, near: 1, far: 12 }); winLight.shadow.bias = -0.0008; room.add(winLight, winLight.target);
 }
 const gamer = makeCharacter(); room.add(gamer.root);
+// grandma (CFG.grandma = [t0, t1]): the same rig recoloured, with a grey bun and glasses
+const vo = makeCharacter(); room.add(vo.root); vo.root.visible = false;
+{
+  const recolor = { "1fb5a8": "#a05cc8", "17998e": "#7d3c98", "2c3e7a": "#6a4f7a", "2a1a14": "#dcdcdc" };
+  const done = new Set();
+  vo.root.traverse((o) => { if (!o.isMesh || done.has(o.material)) return; done.add(o.material); const k = o.material.color && o.material.color.getHexString(); if (recolor[k]) o.material = o.material.clone(), o.material.color.set(recolor[k]); });
+  const grey = M("#dcdcdc", { roughness: 0.7 });
+  const bun = mesh(new THREE.SphereGeometry(0.1, 16, 12), grey); bun.position.set(0, 0.42, -0.1); vo.head.add(bun);
+  const gm = M("#3a2a20", { roughness: 0.3 });
+  for (const sx of [-1, 1]) { const ring = mesh(new THREE.TorusGeometry(0.045, 0.008, 6, 18), gm, false); ring.position.set(sx * 0.075, 0.22, 0.2); vo.head.add(ring); }
+  const bridge = mesh(new THREE.BoxGeometry(0.06, 0.008, 0.008), gm, false); bridge.position.set(0, 0.225, 0.2); vo.head.add(bridge);
+}
+const GRANDMA = CFG.grandma || null;
 
 // ============================================================ NEWS MODE: TV modes, seated reactions, cameras from cfg
 const TVM = CFG.tv || [[0, "game"]];      // [t0, mode]
@@ -629,6 +642,7 @@ const ROOM_CAMS = {
   behind: [[0.4, 1.8, 3.35], [0.3, 1.72, 3.15], [-0.15, 1.05, -2.9]],
   wide: [[2.1, 1.7, -1.9], [1.8, 1.6, -1.6], [-0.1, 0.75, 1.1]],
   pull: [[0.8, 1.7, -1.5], [1.3, 2.1, -2.1], [0, 1.0, 1.6]],
+  vo: [[0.1, 1.4, -2.35], [0, 1.38, -2.05], [-0.25, 1.0, 1.4]],
 };
 function renderAt(t) {
   room.visible = true;
@@ -640,6 +654,13 @@ function renderAt(t) {
   const [[p0, pname], pi] = at0(POSES, t); const prev = pi > 0 ? POSES[pi - 1][1] : pname;
   const k = smooth(clamp((t - p0) / 0.3));
   const pose = blendPose((SEATED[prev] || SEATED.play)(t), (SEATED[pname] || SEATED.play)(t), k);
+  vo.root.visible = !!GRANDMA && t >= GRANDMA[0] && t < GRANDMA[1];
+  if (vo.root.visible) {
+    vo.root.position.set(-0.62, 0, 1.2); vo.root.rotation.y = Math.PI - 0.25;
+    const wave = Math.sin(t * 6) * 0.35;
+    applyPose(vo, { hipY: 0.93, lean: 0.06, headX: 0.05, headY: -0.2, arms: [[0.05, 0.12, -0.2], [-2.6, 0.3 + wave, -0.3]], legs: [[0, 0], [0, 0]] });
+    vo.mouth.visible = true; vo.mouthO.visible = false; vo.lids.forEach((l) => (l.scale.y = 0.45));
+  }
   gamer.root.position.set(0, 0, 1.62); gamer.root.rotation.y = Math.PI;
   applyPose(gamer, pose);
   gamer.ctrl.visible = !!CTRL_POSES[pname] && k > 0.5;

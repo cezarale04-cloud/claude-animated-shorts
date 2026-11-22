@@ -270,7 +270,8 @@ const boxGTA = gameBox("#ff2e88", "#3a0a6b", "GTA 6", "#ffffff", "JOGO NOVO");
 const boxZEL = gameBox("#2fa84f", "#0d4a2a", "ZELDA", "#ffd84d", "AVENTURA");
 const HELD = [boxGTA, boxZEL];
 HELD.forEach((b) => shop.add(b)); // held in front of his chest: GTA on screen left, Zelda on screen right
-const HOLD_POS = [V3(-0.3, 1.24, -2.2 + 0.5), V3(0.3, 1.24, -2.2 + 0.5)];
+const ONLY = CFG.only || null; // "gta": he already bought it and holds just that box, in the middle
+const HOLD_POS = ONLY ? [V3(0, 1.24, -2.2 + 0.5), V3(9, -9, 9)] : [V3(-0.3, 1.24, -2.2 + 0.5), V3(0.3, 1.24, -2.2 + 0.5)];
 const fly = [gameBox("#ff2e88", "#3a0a6b", "GTA 6", "#ffffff", "JOGO NOVO"), gameBox("#2fa84f", "#0d4a2a", "ZELDA", "#ffd84d", "AVENTURA")];
 fly.forEach((b) => { b.visible = false; shop.add(b); });
 
@@ -311,7 +312,7 @@ function renderAt(t) {
   const z = walking ? mix(-9.5, Z, ease(ramp(t, 0, WALK_END))) : Z;
   shopper.root.position.set(0, 0, z); shopper.root.rotation.y = 0;
   shopSun.position.set(2.5, 5.5, z + 3); shopSun.target.position.set(0, 0, z); shopFill.position.set(0.8, 2.2, z + 3);
-  HELD.forEach((b) => (b.visible = !walking)); fly.forEach((b) => (b.visible = false));
+  HELD.forEach((b, i) => (b.visible = !walking && !(ONLY && i === 1))); fly.forEach((b) => (b.visible = false));
   if (walking) {
     cart.position.set(0, 0, z + 0.95); cart.rotation.y = 0;
     applyPose(shopper, POSE.walkPush(t, (z + 9.5) * 4.2));
